@@ -1,0 +1,45 @@
+import Link from "next/link";
+import { TopAppBar } from "@/components/TopAppBar";
+import { Footer } from "@/components/Footer";
+import { getSession } from "@/lib/session";
+import { logoutAction } from "../login/actions";
+
+const ADMIN_NAV = [
+  { href: "/admin", label: "DASHBOARD" },
+  { href: "/admin/teams", label: "TEAMS" },
+  { href: "/admin/schedule", label: "SCHEDULE" },
+];
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSession();
+  return (
+    <>
+      <TopAppBar active="admin" isAdmin={!!session.admin} />
+      <div className="w-full bg-[#071411] border-b border-[#1F4D3F]">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4 flex justify-between items-center gap-4 flex-wrap">
+          <nav className="flex gap-2 flex-wrap">
+            {ADMIN_NAV.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                className="px-4 py-2 surface-1 text-on-surface-variant text-label-caps font-label-caps rounded hover:text-primary-fixed-dim transition-colors uppercase"
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
+          <form action={logoutAction}>
+            <button
+              type="submit"
+              className="px-4 py-2 text-label-caps font-label-caps text-accent-pink rounded hover:bg-error-container/30 transition-colors uppercase"
+            >
+              Sign out
+            </button>
+          </form>
+        </div>
+      </div>
+      {children}
+      <Footer />
+    </>
+  );
+}

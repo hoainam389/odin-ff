@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ODIN Champion League - Standings</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "primary-fixed-dim": "#92db0b",
+                            "tertiary-fixed": "#f1dbf8",
+                            "on-primary-fixed-variant": "#324f00",
+                            "background": "#101509",
+                            "on-surface-variant": "#c1caaf",
+                            "surface-variant": "#323729",
+                            "on-error": "#690005",
+                            "primary": "#ffffff",
+                            "primary-container": "#adf836",
+                            "on-primary": "#213600",
+                            "error-container": "#93000a",
+                            "secondary-fixed": "#e0e3e5",
+                            "inverse-primary": "#436900",
+                            "secondary": "#c4c7c9",
+                            "primary-fixed": "#adf836",
+                            "surface-container-highest": "#323729",
+                            "tertiary-fixed-dim": "#d4c0db",
+                            "surface-bright": "#363b2d",
+                            "secondary-fixed-dim": "#c4c7c9",
+                            "inverse-surface": "#e0e5d1",
+                            "tertiary-container": "#f1dbf8",
+                            "on-background": "#e0e5d1",
+                            "on-primary-container": "#486f00",
+                            "on-surface": "#e0e5d1",
+                            "error": "#ffb4ab",
+                            "on-tertiary-fixed": "#23162b",
+                            "on-secondary": "#2d3133",
+                            "tertiary": "#ffffff",
+                            "secondary-container": "#464a4b",
+                            "on-error-container": "#ffdad6",
+                            "surface-container": "#1c2115",
+                            "on-secondary-fixed": "#191c1e",
+                            "surface-tint": "#92db0b",
+                            "surface-container-low": "#181d11",
+                            "surface": "#101509",
+                            "outline": "#8b947b",
+                            "inverse-on-surface": "#2d3225",
+                            "outline-variant": "#424a35",
+                            "on-secondary-container": "#b6b9bb",
+                            "on-tertiary-fixed-variant": "#504158",
+                            "surface-container-high": "#272c1f",
+                            "on-primary-fixed": "#111f00",
+                            "surface-container-lowest": "#0b1005",
+                            "on-tertiary-container": "#6f5e77",
+                            "on-secondary-fixed-variant": "#444749",
+                            "surface-dim": "#101509",
+                            "on-tertiary": "#392b41"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.125rem",
+                            "lg": "0.25rem",
+                            "xl": "0.5rem",
+                            "full": "0.75rem"
+                    },
+                    "spacing": {
+                            "margin-mobile": "16px",
+                            "unit": "4px",
+                            "container-max": "1280px",
+                            "gutter": "16px",
+                            "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                            "display-md": ["Bebas Neue"],
+                            "body-lg": ["Inter"],
+                            "headline-md": ["Bebas Neue"],
+                            "headline-lg-mobile": ["Bebas Neue"],
+                            "headline-lg": ["Bebas Neue"],
+                            "display-lg": ["Bebas Neue"],
+                            "label-caps": ["Inter"],
+                            "body-md": ["Inter"],
+                            "scoreboard-num": ["Bebas Neue"],
+                            "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                            "display-md": ["48px", { "lineHeight": "48px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                            "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "500" }],
+                            "headline-md": ["20px", { "lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                            "headline-lg-mobile": ["24px", { "lineHeight": "24px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+                            "headline-lg": ["32px", { "lineHeight": "32px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+                            "display-lg": ["80px", { "lineHeight": "80px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                            "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                            "scoreboard-num": ["40px", { "lineHeight": "40px", "fontWeight": "400" }],
+                            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .scanlines {
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+        }
+        .pitch-bg {
+            background-color: #050807;
+            background-image: radial-gradient(circle at top center, rgba(240, 253, 250, 0.04) 0%, transparent 60%);
+        }
+        .surface-1 {
+            background-color: #0A1F1A;
+            border: 1px solid #1F4D3F;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.05);
+        }
+        .neon-glow {
+            box-shadow: 0 0 12px rgba(173, 248, 54, 0.3);
+        }
+        .pulse-pink {
+            animation: pulse-op 1.5s infinite;
+        }
+        @keyframes pulse-op {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .led-strip {
+            background: linear-gradient(90deg, transparent, #adf836, transparent);
+            background-size: 200% 100%;
+            animation: led-scroll 3s linear infinite;
+        }
+        @keyframes led-scroll {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        .clip-hex {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+    </style>
+</head>
+<body class="pitch-bg text-on-surface min-h-screen flex flex-col font-body-md antialiased scanlines">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface border-b-2 border-primary-fixed-dim shadow-[0_4px_12px_rgba(146,219,11,0.3)] docked full-width top-0 z-50 sticky relative">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 border-2 border-primary-fixed flex items-center justify-center bg-[#071411]">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="sports_soccer">sports_soccer</span>
+</div>
+<div>
+<h1 class="text-headline-lg font-headline-lg text-primary-fixed-dim italic uppercase tracking-wider leading-none">ODIN</h1>
+<div class="text-label-caps font-label-caps text-on-surface-variant opacity-80 mt-1">EST. 2026 · NITECO INTERNAL LEAGUE</div>
+</div>
+</div>
+<nav class="hidden md:flex gap-8 items-center h-full">
+<a class="text-primary-fixed border-b-2 border-primary-fixed pb-2 text-headline-md font-headline-md mt-2" href="#">STANDINGS</a>
+<a class="text-on-surface-variant font-label-caps hover:text-primary-fixed-dim transition-colors duration-200 uppercase tracking-widest text-sm" href="#">FIXTURES</a>
+<a class="text-on-surface-variant font-label-caps hover:text-primary-fixed-dim transition-colors duration-200 uppercase tracking-widest text-sm" href="#">MATCHES</a>
+</nav>
+<div class="flex items-center gap-6">
+<div class="hidden sm:flex items-center gap-2 bg-[#FF2E63] text-surface px-3 py-1 rounded pulse-pink">
+<span class="material-symbols-outlined text-[16px]" data-icon="fiber_manual_record" data-weight="fill" style="font-variation-settings: 'FILL' 1;">fiber_manual_record</span>
+<span class="font-label-caps text-label-caps text-surface">LIVE</span>
+</div>
+<a class="text-on-surface-variant font-label-caps hover:text-primary-fixed transition-colors" href="#">ADMIN</a>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-[2px] led-strip"></div>
+</header>
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
+<!-- Hero Stats Strip -->
+<section class="surface-1 rounded w-full overflow-hidden">
+<div class="grid grid-cols-2 md:grid-cols-5 divide-x divide-[#1F4D3F] border-b border-[#1F4D3F]">
+<div class="p-4 flex flex-col items-center justify-center">
+<span class="text-label-caps font-label-caps text-on-surface-variant mb-1">MATCHES PLAYED</span>
+<span class="text-scoreboard-num font-scoreboard-num text-primary">12</span>
+</div>
+<div class="p-4 flex flex-col items-center justify-center">
+<span class="text-label-caps font-label-caps text-on-surface-variant mb-1">GOALS</span>
+<span class="text-scoreboard-num font-scoreboard-num text-primary">47</span>
+</div>
+<div class="p-4 flex flex-col items-center justify-center">
+<span class="text-label-caps font-label-caps text-on-surface-variant mb-1">YELLOW CARDS</span>
+<span class="text-scoreboard-num font-scoreboard-num text-primary">23</span>
+</div>
+<div class="p-4 flex flex-col items-center justify-center">
+<span class="text-label-caps font-label-caps text-on-surface-variant mb-1">RED CARDS</span>
+<span class="text-scoreboard-num font-scoreboard-num text-error">2</span>
+</div>
+<div class="p-4 flex flex-col items-center justify-center col-span-2 md:col-span-1 bg-[#101509]">
+<span class="text-label-caps font-label-caps text-on-surface-variant mb-1 text-center">FAIR PLAY LEADER</span>
+<span class="text-headline-md font-headline-md text-primary-fixed truncate w-full text-center">TEAM ALPHA</span>
+</div>
+</div>
+</section>
+<!-- Main Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Standings -->
+<section class="lg:col-span-8 flex flex-col gap-6">
+<div class="flex items-center gap-3 border-b border-[#1F4D3F] pb-4">
+<span class="material-symbols-outlined text-primary-fixed text-3xl" data-icon="emoji_events">emoji_events</span>
+<h2 class="text-display-md font-display-md text-primary-fixed m-0 leading-none">STANDINGS</h2>
+</div>
+<!-- Podium -->
+<div class="flex justify-center items-end gap-2 sm:gap-4 h-64 mt-4 mb-8">
+<!-- Silver (2nd) -->
+<div class="flex flex-col items-center justify-end h-[80%]">
+<div class="text-scoreboard-num font-scoreboard-num text-primary mb-2">9</div>
+<div class="w-16 h-16 sm:w-20 sm:h-20 bg-secondary clip-hex flex items-center justify-center text-3xl border-2 border-[#101509] mb-4">🦅</div>
+<div class="w-20 sm:w-24 bg-gradient-to-t from-[#1A2622] to-secondary-container border-t-2 border-secondary h-24 flex items-start justify-center pt-2 neon-glow" style="box-shadow: 0 0 15px rgba(196,199,201,0.2);">
+<span class="font-display-md text-display-md text-[#101509] opacity-50">2</span>
+</div>
+</div>
+<!-- Gold (1st) -->
+<div class="flex flex-col items-center justify-end h-full relative">
+<!-- Sparkles placeholder (css only) -->
+<div class="absolute inset-0 top-[-20px] pointer-events-none opacity-50">
+<div class="absolute top-[10%] left-[20%] w-1 h-1 bg-[#FFD700] rounded-full animate-ping"></div>
+<div class="absolute top-[30%] right-[10%] w-1.5 h-1.5 bg-[#FFD700] rounded-full animate-ping" style="animation-delay: 0.5s"></div>
+</div>
+<div class="text-scoreboard-num font-scoreboard-num text-primary mb-2">12</div>
+<div class="w-20 h-20 sm:w-24 sm:h-24 bg-[#FFD700] clip-hex flex items-center justify-center text-4xl border-4 border-[#101509] mb-4 neon-glow" style="box-shadow: 0 0 20px rgba(255,215,0,0.4);">🐉</div>
+<div class="w-24 sm:w-32 bg-gradient-to-t from-[#1A2622] to-[#8B7500] border-t-4 border-[#FFD700] h-32 flex items-start justify-center pt-2">
+<span class="font-display-md text-display-md text-[#101509] opacity-60">1</span>
+</div>
+</div>
+<!-- Bronze (3rd) -->
+<div class="flex flex-col items-center justify-end h-[70%]">
+<div class="text-scoreboard-num font-scoreboard-num text-primary mb-2">7</div>
+<div class="w-16 h-16 sm:w-20 sm:h-20 bg-[#CD7F32] clip-hex flex items-center justify-center text-3xl border-2 border-[#101509] mb-4">🦁</div>
+<div class="w-20 sm:w-24 bg-gradient-to-t from-[#1A2622] to-[#6B4226] border-t-2 border-[#CD7F32] h-20 flex items-start justify-center pt-2">
+<span class="font-display-md text-display-md text-[#101509] opacity-50">3</span>
+</div>
+</div>
+</div>
+<!-- Table -->
+<div class="surface-1 rounded overflow-x-auto">
+<table class="w-full text-left border-collapse whitespace-nowrap">
+<thead>
+<tr class="border-b-2 border-[#1F4D3F] bg-[#071411]">
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant w-12 text-center">#</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant">TEAM</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10">P</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10">W</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10">D</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10">L</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10 hidden sm:table-cell">GF</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10 hidden sm:table-cell">GA</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-12">GD</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10">🟨</th>
+<th class="p-3 font-label-caps text-label-caps text-on-surface-variant text-center w-10">🟥</th>
+<th class="p-3 font-label-caps text-label-caps text-primary-fixed text-center w-16">PTS</th>
+</tr>
+</thead>
+<tbody class="font-body-md">
+<!-- Row 1 -->
+<tr class="border-b border-[#1F4D3F] hover:bg-[#152A23] transition-colors group relative">
+<td class="p-3 text-center">
+<div class="w-6 h-6 bg-[#FFD700] text-[#101509] font-headline-md text-headline-md rounded-sm mx-auto flex items-center justify-center">1</div>
+</td>
+<td class="p-3 font-bold flex items-center gap-2 border-l-2 border-[#FFD700] ml-[1px]">
+<span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                                    TEAM BETA 🐉
+                                </td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">0</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">0</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">12</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">2</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none text-primary-fixed">+10</td>
+<td class="p-3 text-center text-on-surface-variant">2</td>
+<td class="p-3 text-center text-on-surface-variant">0</td>
+<td class="p-0 text-center">
+<div class="bg-primary-fixed text-[#101509] font-scoreboard-num text-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">12</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-[#1F4D3F] bg-[#071411] hover:bg-[#152A23] transition-colors group">
+<td class="p-3 text-center">
+<div class="w-6 h-6 bg-secondary text-[#101509] font-headline-md text-headline-md rounded-sm mx-auto flex items-center justify-center">2</div>
+</td>
+<td class="p-3 font-bold flex items-center gap-2 border-l-2 border-secondary ml-[1px]">
+<span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                                    TEAM ALPHA 🦅
+                                </td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">3</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">0</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">8</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none text-primary-fixed">+4</td>
+<td class="p-3 text-center text-on-surface-variant">1</td>
+<td class="p-3 text-center text-on-surface-variant">0</td>
+<td class="p-0 text-center">
+<div class="bg-primary-fixed text-[#101509] font-scoreboard-num text-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">9</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-[#1F4D3F] hover:bg-[#152A23] transition-colors group">
+<td class="p-3 text-center">
+<div class="w-6 h-6 bg-[#CD7F32] text-[#101509] font-headline-md text-headline-md rounded-sm mx-auto flex items-center justify-center">3</div>
+</td>
+<td class="p-3 font-bold flex items-center gap-2 border-l-2 border-[#CD7F32] ml-[1px]">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                    TEAM COBRA 🦁
+                                </td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">2</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">5</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none text-primary-fixed">+1</td>
+<td class="p-3 text-center text-on-surface-variant">3</td>
+<td class="p-3 text-center text-on-surface-variant">0</td>
+<td class="p-0 text-center">
+<div class="bg-primary-fixed text-[#101509] font-scoreboard-num text-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">7</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="border-b border-[#1F4D3F] bg-[#071411] hover:bg-[#152A23] transition-colors group">
+<td class="p-3 text-center text-on-surface-variant font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 font-bold flex items-center gap-2 border-l-2 border-transparent group-hover:border-primary-fixed ml-[1px]">
+<span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                                    TEAM DELTA ⚡
+                                </td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">2</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none text-on-surface-variant">0</td>
+<td class="p-3 text-center text-on-surface-variant">1</td>
+<td class="p-3 text-center text-on-surface-variant">0</td>
+<td class="p-0 text-center">
+<div class="bg-primary-fixed text-[#101509] font-scoreboard-num text-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">5</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="border-b border-[#1F4D3F] hover:bg-[#152A23] transition-colors group">
+<td class="p-3 text-center text-on-surface-variant font-scoreboard-num text-scoreboard-num text-xl leading-none">5</td>
+<td class="p-3 font-bold flex items-center gap-2 border-l-2 border-transparent group-hover:border-primary-fixed ml-[1px]">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                    TEAM EAGLE 🔥
+                                </td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">2</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">3</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">6</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none text-[#FF2E63]">-3</td>
+<td class="p-3 text-center text-on-surface-variant">4</td>
+<td class="p-3 text-center text-on-surface-variant text-error font-bold">1</td>
+<td class="p-0 text-center">
+<div class="bg-primary-fixed text-[#101509] font-scoreboard-num text-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">4</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="border-b border-[#1F4D3F] bg-[#071411] hover:bg-[#152A23] transition-colors group">
+<td class="p-3 text-center text-on-surface-variant font-scoreboard-num text-scoreboard-num text-xl leading-none">6</td>
+<td class="p-3 font-bold flex items-center gap-2 border-l-2 border-transparent group-hover:border-primary-fixed ml-[1px]">
+<span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                                    TEAM FENIX 🌊
+                                </td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">0</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">2</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">2</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">2</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">7</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none text-[#FF2E63]">-5</td>
+<td class="p-3 text-center text-on-surface-variant">2</td>
+<td class="p-3 text-center text-on-surface-variant">0</td>
+<td class="p-0 text-center">
+<div class="bg-primary-fixed text-[#101509] font-scoreboard-num text-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">2</div>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="hover:bg-[#152A23] transition-colors group">
+<td class="p-3 text-center text-on-surface-variant font-scoreboard-num text-scoreboard-num text-xl leading-none">7</td>
+<td class="p-3 font-bold flex items-center gap-2 border-l-2 border-transparent group-hover:border-primary-fixed ml-[1px]">
+<span class="w-2 h-2 rounded-full bg-pink-500"></span>
+                                    TEAM GHOST 🌙
+                                </td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">0</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">0</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none">4</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">1</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none hidden sm:table-cell">8</td>
+<td class="p-3 text-center font-scoreboard-num text-scoreboard-num text-xl leading-none text-[#FF2E63]">-7</td>
+<td class="p-3 text-center text-on-surface-variant">5</td>
+<td class="p-3 text-center text-on-surface-variant text-error font-bold">1</td>
+<td class="p-0 text-center">
+<div class="bg-primary-fixed text-[#101509] font-scoreboard-num text-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">0</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Right Column: Sidebar -->
+<aside class="lg:col-span-4 flex flex-col gap-6">
+<!-- Tonight's Matches -->
+<div class="surface-1 rounded p-4">
+<div class="flex items-center justify-between border-b border-[#1F4D3F] pb-3 mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="stadium">stadium</span>
+<h3 class="text-headline-md font-headline-md text-primary m-0 uppercase leading-none">Tonight's Matches</h3>
+</div>
+<span class="font-scoreboard-num text-scoreboard-num text-xl text-primary-fixed">OCT 24</span>
+</div>
+<div class="flex flex-col gap-3">
+<div class="bg-[#071411] p-3 rounded flex flex-col gap-2 border-l-2 border-primary-fixed">
+<div class="flex justify-between items-center text-sm font-label-caps text-label-caps text-on-surface-variant">
+<span>MD 5</span>
+<span class="bg-[#1A2622] px-2 py-1 rounded text-primary-fixed">KICKS OFF · 19:30</span>
+</div>
+<div class="flex justify-between items-center font-bold">
+<span>TEAM ALPHA</span>
+<span class="text-on-surface-variant font-label-caps text-[10px]">VS</span>
+<span>TEAM DELTA</span>
+</div>
+</div>
+<div class="bg-[#071411] p-3 rounded flex flex-col gap-2 border-l-2 border-[#1F4D3F]">
+<div class="flex justify-between items-center text-sm font-label-caps text-label-caps text-on-surface-variant">
+<span>MD 5</span>
+<span class="bg-[#1A2622] px-2 py-1 rounded">KICKS OFF · 20:30</span>
+</div>
+<div class="flex justify-between items-center font-bold">
+<span>TEAM COBRA</span>
+<span class="text-on-surface-variant font-label-caps text-[10px]">VS</span>
+<span>TEAM FENIX</span>
+</div>
+</div>
+<div class="bg-[#071411] p-3 rounded flex flex-col gap-2 border-l-2 border-[#1F4D3F]">
+<div class="flex justify-between items-center text-sm font-label-caps text-label-caps text-on-surface-variant">
+<span>MD 5</span>
+<span class="bg-[#1A2622] px-2 py-1 rounded">KICKS OFF · 21:30</span>
+</div>
+<div class="flex justify-between items-center font-bold">
+<span>TEAM EAGLE</span>
+<span class="text-on-surface-variant font-label-caps text-[10px]">VS</span>
+<span>TEAM GHOST</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Final Whistle -->
+<div class="surface-1 rounded p-4">
+<div class="flex items-center justify-between border-b border-[#1F4D3F] pb-3 mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="sports">sports</span>
+<h3 class="text-headline-md font-headline-md text-on-surface-variant m-0 uppercase leading-none">Final Whistle</h3>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Result 1 -->
+<div class="flex items-center justify-between p-2 hover:bg-[#152A23] rounded transition-colors group">
+<span class="font-label-caps text-label-caps text-on-surface-variant w-10">MD 4</span>
+<div class="flex-grow flex justify-center items-center gap-3 font-scoreboard-num text-scoreboard-num text-xl leading-none">
+<span class="text-primary-fixed">BETA</span>
+<div class="bg-[#071411] px-3 py-1 rounded flex items-center gap-2 border border-[#1F4D3F]">
+<span class="text-primary-fixed">4</span>
+<span class="text-on-surface-variant text-sm">-</span>
+<span class="text-on-surface-variant">1</span>
+</div>
+<span class="text-on-surface-variant">COBRA</span>
+</div>
+</div>
+<!-- Result 2 -->
+<div class="flex items-center justify-between p-2 hover:bg-[#152A23] rounded transition-colors group">
+<span class="font-label-caps text-label-caps text-on-surface-variant w-10">MD 4</span>
+<div class="flex-grow flex justify-center items-center gap-3 font-scoreboard-num text-scoreboard-num text-xl leading-none">
+<span class="text-primary-fixed">ALPHA</span>
+<div class="bg-[#071411] px-3 py-1 rounded flex items-center gap-2 border border-[#1F4D3F]">
+<span class="text-primary-fixed">3</span>
+<span class="text-on-surface-variant text-sm">-</span>
+<span class="text-on-surface-variant">0</span>
+</div>
+<span class="text-on-surface-variant">EAGLE</span>
+</div>
+</div>
+<!-- Result 3 -->
+<div class="flex items-center justify-between p-2 hover:bg-[#152A23] rounded transition-colors group">
+<span class="font-label-caps text-label-caps text-on-surface-variant w-10">MD 4</span>
+<div class="flex-grow flex justify-center items-center gap-3 font-scoreboard-num text-scoreboard-num text-xl leading-none">
+<span class="text-on-surface-variant">FENIX</span>
+<div class="bg-[#071411] px-3 py-1 rounded flex items-center gap-2 border border-[#1F4D3F]">
+<span class="text-on-surface-variant">1</span>
+<span class="text-on-surface-variant text-sm">-</span>
+<span class="text-primary-fixed">2</span>
+</div>
+<span class="text-primary-fixed">DELTA</span>
+</div>
+</div>
+<!-- Result 4 -->
+<div class="flex items-center justify-between p-2 hover:bg-[#152A23] rounded transition-colors group">
+<span class="font-label-caps text-label-caps text-on-surface-variant w-10">MD 4</span>
+<div class="flex-grow flex justify-center items-center gap-3 font-scoreboard-num text-scoreboard-num text-xl leading-none">
+<span class="text-on-surface-variant">GHOST</span>
+<div class="bg-[#071411] px-3 py-1 rounded flex items-center gap-2 border border-[#1F4D3F]">
+<span class="text-on-surface-variant">0</span>
+<span class="text-on-surface-variant text-sm">-</span>
+<span class="text-primary-fixed">3</span>
+</div>
+<span class="text-primary-fixed">BETA</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant full-width bottom-0 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-8 w-full max-w-container-max mx-auto gap-4">
+<div class="text-label-caps font-label-caps text-on-surface-variant tracking-widest uppercase">
+                ODIN CHAMPION LEAGUE v2.4.0
+            </div>
+<nav class="flex gap-6 items-center">
+<a class="text-on-surface-variant text-label-caps font-label-caps hover:text-primary-fixed transition-colors uppercase" href="#">LEAGUE RULES</a>
+<a class="text-on-surface-variant text-label-caps font-label-caps hover:text-primary-fixed transition-colors uppercase" href="#">PRIVACY</a>
+<a class="text-on-surface-variant text-label-caps font-label-caps hover:text-primary-fixed transition-colors uppercase" href="#">PARTNERS</a>
+</nav>
+<div class="text-body-sm font-body-sm text-on-surface-variant opacity-60">
+                ODIN CHAMPION LEAGUE · NITECO · SEASON 2026
+            </div>
+</div>
+</footer>
+</body></html>

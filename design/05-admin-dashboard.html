@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ODIN Champion League - Admin Control Room</title>
+<!-- Google Fonts: Bebas Neue & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config from Guidelines -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#2d3225",
+                    "on-background": "#e0e5d1",
+                    "on-tertiary": "#392b41",
+                    "surface-container-lowest": "#0b1005",
+                    "on-tertiary-fixed": "#23162b",
+                    "on-primary-fixed": "#111f00",
+                    "on-surface": "#e0e5d1",
+                    "on-primary-fixed-variant": "#324f00",
+                    "error-container": "#93000a",
+                    "surface-variant": "#323729",
+                    "secondary-fixed-dim": "#c4c7c9",
+                    "primary": "#ffffff",
+                    "tertiary-fixed-dim": "#d4c0db",
+                    "primary-container": "#adf836",
+                    "on-secondary-fixed-variant": "#444749",
+                    "surface": "#101509",
+                    "on-primary-container": "#486f00",
+                    "error": "#ffb4ab",
+                    "surface-container-low": "#181d11",
+                    "on-tertiary-container": "#6f5e77",
+                    "tertiary": "#ffffff",
+                    "primary-fixed-dim": "#92db0b",
+                    "on-secondary-container": "#b6b9bb",
+                    "tertiary-fixed": "#f1dbf8",
+                    "on-tertiary-fixed-variant": "#504158",
+                    "surface-container-high": "#272c1f",
+                    "outline-variant": "#424a35",
+                    "on-primary": "#213600",
+                    "surface-tint": "#92db0b",
+                    "on-error": "#690005",
+                    "tertiary-container": "#f1dbf8",
+                    "on-surface-variant": "#c1caaf",
+                    "surface-dim": "#101509",
+                    "primary-fixed": "#adf836",
+                    "secondary-fixed": "#e0e3e5",
+                    "secondary-container": "#464a4b",
+                    "secondary": "#c4c7c9",
+                    "inverse-surface": "#e0e5d1",
+                    "outline": "#8b947b",
+                    "surface-bright": "#363b2d",
+                    "background": "#101509",
+                    "inverse-primary": "#436900",
+                    "surface-container-highest": "#323729",
+                    "on-error-container": "#ffdad6",
+                    "surface-container": "#1c2115",
+                    "on-secondary-fixed": "#191c1e",
+                    "on-secondary": "#2d3133"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "32px",
+                    "container-max": "1280px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Bebas Neue"],
+                    "headline-lg": ["Bebas Neue"],
+                    "headline-md": ["Bebas Neue"],
+                    "headline-lg-mobile": ["Bebas Neue"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-md": ["Bebas Neue"],
+                    "scoreboard-num": ["Bebas Neue"]
+            },
+            "fontSize": {
+                    "display-lg": ["80px", { "lineHeight": "80px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                    "headline-lg": ["32px", { "lineHeight": "32px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+                    "headline-md": ["20px", { "lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                    "headline-lg-mobile": ["24px", { "lineHeight": "24px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+                    "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "500" }],
+                    "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                    "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                    "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "display-md": ["48px", { "lineHeight": "48px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                    "scoreboard-num": ["40px", { "lineHeight": "40px", "fontWeight": "400" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Base styles mapped to tokens */
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            font-family: theme('fontFamily.body-md');
+        }
+        
+        /* Scanlines Overlay */
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+        }
+
+        /* Neon Glow Utility */
+        .neon-glow {
+            box-shadow: 0 0 12px rgba(173, 248, 54, 0.3);
+        }
+        
+        .neon-text-glow {
+            text-shadow: 0 0 8px rgba(173, 248, 54, 0.5);
+        }
+
+        /* Tonal pitch gradient simulation */
+        .pitch-base {
+            background: radial-gradient(circle at 50% 0%, rgba(240, 253, 250, 0.04) 0%, transparent 70%);
+        }
+
+        /* Hexagon Clip */
+        .hex-clip {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+    </style>
+</head>
+<body class="pitch-base min-h-screen relative overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Global Scanlines Overlay -->
+<div class="scanlines pointer-events-none fixed inset-0 z-[100] opacity-50 mix-blend-overlay"></div>
+<!-- 1. TOP HEADER (Derived from Shared Component JSON TopAppBar) -->
+<header class="bg-surface border-b-2 border-primary-fixed-dim shadow-[0_4px_12px_rgba(146,219,11,0.3)] sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="text-headline-lg font-headline-lg text-primary-fixed-dim italic uppercase neon-text-glow">
+                ODIN CHAMPION LEAGUE
+            </div>
+<!-- Navigation -->
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant font-label-caps hover:text-primary-fixed-dim transition-colors duration-200 uppercase" href="#">STANDINGS</a>
+<a class="text-primary-fixed border-b-2 border-primary-fixed pb-2 font-label-caps uppercase uppercase" href="#">FIXTURES</a>
+<a class="text-on-surface-variant font-label-caps hover:text-primary-fixed-dim transition-colors duration-200 uppercase" href="#">MATCHES</a>
+</nav>
+<!-- Trailing Actions & Admin Identity -->
+<div class="flex items-center gap-6">
+<div class="text-error font-label-caps animate-pulse flex items-center gap-2">
+                    ● LIVE
+                </div>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-DEFAULT font-label-caps neon-glow tracking-widest uppercase">
+                    ADMIN · admin
+                </div>
+<button class="text-on-surface-variant font-label-caps hover:text-primary-fixed transition-colors underline underline-offset-4">SIGN OUT</button>
+</div>
+</div>
+</header>
+<!-- 2. ADMIN CONTROL BAR -->
+<div class="w-full bg-surface-container-high border-b border-outline-variant py-4 px-margin-desktop relative z-30">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-lg text-headline-lg text-primary-fixed tracking-wide">MATCH CONTROL ROOM</h1>
+<span class="font-label-caps text-label-caps text-error bg-error/10 px-2 py-1 rounded border border-error/20">
+                    ADMIN MODE · ALL CHANGES BROADCAST LIVE...
+                </span>
+</div>
+<div class="flex gap-3">
+<button class="bg-primary-fixed text-on-primary-fixed px-5 py-2 font-label-caps text-label-caps rounded-DEFAULT hover:bg-primary-fixed-dim transition-colors uppercase neon-glow">
+                    ENTER RESULT
+                </button>
+<button class="border border-primary-fixed text-primary-fixed px-5 py-2 font-label-caps text-label-caps rounded-DEFAULT hover:bg-primary-fixed/10 transition-colors uppercase">
+                    MANAGE TEAMS
+                </button>
+<button class="border border-outline text-on-surface px-5 py-2 font-label-caps text-label-caps rounded-DEFAULT hover:bg-surface-variant transition-colors uppercase">
+                    EXPORT/IMPORT
+                </button>
+<button class="border border-error text-error px-5 py-2 font-label-caps text-label-caps rounded-DEFAULT hover:bg-error/10 transition-colors uppercase">
+                    RESET SEASON
+                </button>
+</div>
+</div>
+</div>
+<!-- MAIN CONTENT CANVAS -->
+<main class="max-w-container-max mx-auto px-margin-desktop py-8 flex flex-col gap-8 relative z-20">
+<!-- 3. HERO STATS -->
+<section class="grid grid-cols-2 md:grid-cols-5 gap-4">
+<!-- Stat Tile 1 -->
+<div class="bg-surface-container border-t border-l border-outline-variant rounded-lg p-4 relative group hover:border-primary-fixed/50 transition-colors shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)]">
+<span class="material-symbols-outlined absolute top-4 right-4 text-[16px] text-on-surface-variant group-hover:text-primary-fixed cursor-pointer transition-colors" style="font-variation-settings: 'FILL' 0;">edit</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">TOTAL MATCHES</div>
+<div class="font-scoreboard-num text-scoreboard-num text-primary-fixed neon-text-glow tracking-wider">144</div>
+</div>
+<!-- Stat Tile 2 -->
+<div class="bg-surface-container border-t border-l border-outline-variant rounded-lg p-4 relative group hover:border-primary-fixed/50 transition-colors shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)]">
+<span class="material-symbols-outlined absolute top-4 right-4 text-[16px] text-on-surface-variant group-hover:text-primary-fixed cursor-pointer transition-colors" style="font-variation-settings: 'FILL' 0;">edit</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">GOALS SCORED</div>
+<div class="font-scoreboard-num text-scoreboard-num text-primary-fixed neon-text-glow tracking-wider">312</div>
+</div>
+<!-- Stat Tile 3 -->
+<div class="bg-surface-container border-t border-l border-outline-variant rounded-lg p-4 relative group hover:border-primary-fixed/50 transition-colors shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)]">
+<span class="material-symbols-outlined absolute top-4 right-4 text-[16px] text-on-surface-variant group-hover:text-primary-fixed cursor-pointer transition-colors" style="font-variation-settings: 'FILL' 0;">edit</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">YELLOW CARDS</div>
+<div class="font-scoreboard-num text-scoreboard-num text-primary-fixed neon-text-glow tracking-wider">89</div>
+</div>
+<!-- Stat Tile 4 -->
+<div class="bg-surface-container border-t border-l border-outline-variant rounded-lg p-4 relative group hover:border-primary-fixed/50 transition-colors shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)]">
+<span class="material-symbols-outlined absolute top-4 right-4 text-[16px] text-on-surface-variant group-hover:text-primary-fixed cursor-pointer transition-colors" style="font-variation-settings: 'FILL' 0;">edit</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">RED CARDS</div>
+<div class="font-scoreboard-num text-scoreboard-num text-error tracking-wider text-shadow-sm">12</div>
+</div>
+<!-- Stat Tile 5 -->
+<div class="bg-surface-container border-t border-l border-outline-variant rounded-lg p-4 relative group hover:border-primary-fixed/50 transition-colors shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)]">
+<span class="material-symbols-outlined absolute top-4 right-4 text-[16px] text-on-surface-variant group-hover:text-primary-fixed cursor-pointer transition-colors" style="font-variation-settings: 'FILL' 0;">edit</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">FAIR PLAY INDEX</div>
+<div class="font-scoreboard-num text-scoreboard-num text-primary-fixed neon-text-glow tracking-wider">8.4</div>
+</div>
+</section>
+<!-- 4. MAIN GRID -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- LEFT COLUMN: FIXTURE EDITOR (60%) -->
+<div class="lg:col-span-7 flex flex-col gap-4">
+<div class="flex justify-between items-end border-b border-surface-variant pb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase tracking-widest">FIXTURE EDITOR · MATCHDAY 12</h2>
+<button class="flex items-center gap-2 text-primary-fixed font-label-caps text-label-caps hover:text-primary-fixed-dim transition-colors uppercase">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+                        AUTO-SCHEDULE
+                    </button>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Standard Row -->
+<div class="bg-surface-container border-l-[3px] border-primary-fixed flex items-center p-3 rounded-r-lg shadow-sm hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant cursor-grab mr-4 active:cursor-grabbing hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">drag_indicator</span>
+<div class="flex-1 flex items-center justify-between font-headline-md text-headline-md text-on-surface">
+<div class="flex-1 text-right pr-6 tracking-wider">VALHALLA FC</div>
+<div class="bg-background px-4 py-1 rounded border border-surface-variant font-scoreboard-num text-scoreboard-num text-primary-fixed min-w-[80px] text-center">2 - 0</div>
+<div class="flex-1 text-left pl-6 tracking-wider text-on-surface-variant">MIDGARD UTD</div>
+</div>
+<button class="ml-4 p-2 rounded hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">edit</span>
+</button>
+</div>
+<!-- Drop Target State -->
+<div class="bg-primary-container/10 border border-primary-fixed flex items-center justify-center p-3 rounded-lg h-[72px] border-dashed neon-glow">
+<span class="font-label-caps text-label-caps text-primary-fixed uppercase tracking-widest">DROP FIXTURE HERE</span>
+</div>
+<!-- Standard Row -->
+<div class="bg-surface-container border-l-[3px] border-primary-fixed flex items-center p-3 rounded-r-lg shadow-sm hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant cursor-grab mr-4 active:cursor-grabbing hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">drag_indicator</span>
+<div class="flex-1 flex items-center justify-between font-headline-md text-headline-md text-on-surface">
+<div class="flex-1 text-right pr-6 tracking-wider text-on-surface-variant">JOTUNN CITY</div>
+<div class="bg-background px-4 py-1 rounded border border-surface-variant font-scoreboard-num text-scoreboard-num text-on-surface-variant min-w-[80px] text-center opacity-70">19:00</div>
+<div class="flex-1 text-left pl-6 tracking-wider">AESIR ATHLETIC</div>
+</div>
+<button class="ml-4 p-2 rounded hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">edit</span>
+</button>
+</div>
+<!-- Dragging State -->
+<div class="bg-surface-container border border-primary-fixed flex items-center p-3 rounded-lg shadow-2xl opacity-60 scale-[0.98] z-10 relative">
+<span class="material-symbols-outlined text-primary-fixed cursor-grabbing mr-4" style="font-variation-settings: 'FILL' 0;">drag_indicator</span>
+<div class="flex-1 flex items-center justify-between font-headline-md text-headline-md text-on-surface">
+<div class="flex-1 text-right pr-6 tracking-wider">RAGNAROK ROVERS</div>
+<div class="bg-background px-4 py-1 rounded border border-surface-variant font-scoreboard-num text-scoreboard-num text-on-surface-variant min-w-[80px] text-center">20:30</div>
+<div class="flex-1 text-left pl-6 tracking-wider">FENRIR WOLVES</div>
+</div>
+<button class="ml-4 p-2 rounded transition-colors opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (40%) -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- TEAMS Card -->
+<div class="bg-surface-container border-t border-l border-outline-variant rounded-xl p-6 shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase tracking-widest">ACTIVE TEAMS</h3>
+<button class="bg-surface-variant hover:bg-surface-bright text-on-surface font-label-caps text-label-caps px-3 py-1.5 rounded flex items-center gap-1 transition-colors uppercase border border-outline">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0;">add</span> NEW TEAM
+                        </button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Team Item -->
+<div class="flex items-center justify-between p-2 rounded hover:bg-surface-variant/50 transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-bright hex-clip flex items-center justify-center text-[16px] border border-outline-variant shadow-inner">🐺</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate max-w-[80px]">Valhalla FC</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 cursor-pointer hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">edit</span>
+</div>
+<!-- Team Item -->
+<div class="flex items-center justify-between p-2 rounded hover:bg-surface-variant/50 transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-bright hex-clip flex items-center justify-center text-[16px] border border-outline-variant shadow-inner">🦅</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate max-w-[80px]">Midgard Utd</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 cursor-pointer hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">edit</span>
+</div>
+<!-- Team Item -->
+<div class="flex items-center justify-between p-2 rounded hover:bg-surface-variant/50 transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-bright hex-clip flex items-center justify-center text-[16px] border border-outline-variant shadow-inner">⚔️</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate max-w-[80px]">Jotunn City</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 cursor-pointer hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">edit</span>
+</div>
+<!-- Team Item -->
+<div class="flex items-center justify-between p-2 rounded hover:bg-surface-variant/50 transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-bright hex-clip flex items-center justify-center text-[16px] border border-outline-variant shadow-inner">🛡️</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate max-w-[80px]">Aesir Athl.</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 cursor-pointer hover:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">edit</span>
+</div>
+</div>
+</div>
+<!-- RECENT ACTIVITY -->
+<div class="bg-surface-container border-t border-l border-outline-variant rounded-xl p-6 shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)] flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase tracking-widest mb-6">RECENT ACTIVITY</h3>
+<div class="relative border-l border-surface-variant ml-3 space-y-6">
+<!-- Activity Item -->
+<div class="relative pl-6">
+<div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-primary-fixed neon-glow"></div>
+<div class="flex justify-between items-start">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface">Result entered: <span class="font-bold">VAL 2-0 MID</span></p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">2 mins ago</p>
+</div>
+<button class="font-label-caps text-label-caps text-primary-fixed hover:underline uppercase">UNDO</button>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="relative pl-6">
+<div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-surface-variant border-2 border-background"></div>
+<div class="flex justify-between items-start">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface">Rescheduled: <span class="font-bold">JOT vs AES</span></p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">15 mins ago</p>
+</div>
+<button class="font-label-caps text-label-caps text-primary-fixed hover:underline uppercase">UNDO</button>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="relative pl-6">
+<div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-surface-variant border-2 border-background"></div>
+<div class="flex justify-between items-start">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface">Auto-schedule executed for MD12</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">1 hr ago</p>
+</div>
+<button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary-fixed hover:underline uppercase transition-colors">UNDO</button>
+</div>
+</div>
+</div>
+</div>
+<!-- REALTIME BROADCAST STATUS -->
+<div class="bg-surface-container border border-primary-fixed/30 rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary-fixed/5 group-hover:bg-primary-fixed/10 transition-colors"></div>
+<div class="w-3 h-3 rounded-full bg-primary-fixed animate-pulse neon-glow relative z-10 ml-2"></div>
+<div class="relative z-10">
+<h4 class="font-label-caps text-label-caps text-primary-fixed uppercase tracking-widest neon-text-glow">BROADCAST LIVE</h4>
+<p class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">API Sync active. ~2s latency to public clients.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- 6. TOAST NOTIFICATION -->
+<div class="fixed bottom-8 right-8 z-50 bg-surface-container border border-primary-fixed text-on-surface px-6 py-4 rounded-lg shadow-[0_4px_24px_rgba(173,248,54,0.15)] flex items-center gap-3 animate-[slideIn_0.3s_ease-out]">
+<span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary-fixed">AUTO-SCHEDULE COMPLETE</span>
+</div>
+<!-- 5. MODAL OVERLAY (ENTER MATCH RESULT) -->
+<!-- Un-hide by removing 'hidden' class to see modal -->
+<div class="fixed inset-0 z-[110] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+<div class="w-full max-w-[520px] bg-surface border-t-2 border-l-2 border-outline-variant shadow-2xl shadow-black rounded-xl p-8 relative overflow-hidden">
+<!-- Modal Accent Line -->
+<div class="absolute top-0 left-0 w-full h-1 bg-primary-fixed"></div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-widest mb-8 text-center border-b border-surface-variant pb-4">ENTER MATCH RESULT</h2>
+<div class="grid grid-cols-3 gap-6 items-center mb-8">
+<!-- Home Team -->
+<div class="flex flex-col items-center gap-4">
+<div class="w-16 h-16 bg-surface-bright hex-clip flex items-center justify-center text-[28px] border border-outline-variant">🐺</div>
+<div class="font-headline-md text-headline-md text-on-surface text-center">VALHALLA</div>
+<div class="flex gap-2">
+<input class="w-10 bg-background border border-surface-variant rounded text-center text-on-surface font-scoreboard-num focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed placeholder-on-surface-variant/30 text-sm py-1" placeholder="Y" type="number"/>
+<input class="w-10 bg-background border border-error/50 rounded text-center text-error font-scoreboard-num focus:border-error focus:ring-1 focus:ring-error placeholder-error/30 text-sm py-1" placeholder="R" type="number"/>
+</div>
+</div>
+<!-- Score Inputs -->
+<div class="flex items-center justify-center gap-2">
+<input class="w-16 h-20 bg-background border-2 border-surface-variant rounded text-center text-primary-fixed font-scoreboard-num text-scoreboard-num focus:border-primary-fixed focus:ring-0 shadow-inner neon-text-glow" type="number" value="3"/>
+<span class="font-headline-md text-on-surface-variant">-</span>
+<input class="w-16 h-20 bg-background border-2 border-surface-variant rounded text-center text-primary-fixed font-scoreboard-num text-scoreboard-num focus:border-primary-fixed focus:ring-0 shadow-inner neon-text-glow" type="number" value="1"/>
+</div>
+<!-- Away Team -->
+<div class="flex flex-col items-center gap-4">
+<div class="w-16 h-16 bg-surface-bright hex-clip flex items-center justify-center text-[28px] border border-outline-variant">🦅</div>
+<div class="font-headline-md text-headline-md text-on-surface text-center">MIDGARD</div>
+<div class="flex gap-2">
+<input class="w-10 bg-background border border-surface-variant rounded text-center text-on-surface font-scoreboard-num focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed placeholder-on-surface-variant/30 text-sm py-1" placeholder="Y" type="number"/>
+<input class="w-10 bg-background border border-error/50 rounded text-center text-error font-scoreboard-num focus:border-error focus:ring-1 focus:ring-error placeholder-error/30 text-sm py-1" placeholder="R" type="number"/>
+</div>
+</div>
+</div>
+<div class="flex justify-end gap-4 pt-6 border-t border-surface-variant mt-4">
+<button class="border border-outline text-on-surface px-6 py-2.5 font-label-caps text-label-caps rounded-DEFAULT hover:bg-surface-variant transition-colors uppercase">
+                    CANCEL
+                </button>
+<button class="bg-primary-fixed text-on-primary-fixed px-6 py-2.5 font-label-caps text-label-caps rounded-DEFAULT hover:bg-primary-fixed-dim transition-colors uppercase neon-glow flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">cell_tower</span>
+                    SAVE &amp; BROADCAST
+                </button>
+</div>
+</div>
+</div>
+</body></html>

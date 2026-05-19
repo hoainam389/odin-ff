@@ -1,4 +1,6 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+loadEnv({ path: ".env.local" });
+loadEnv({ path: ".env" });
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { teams, matches, members, results } from "./schema";

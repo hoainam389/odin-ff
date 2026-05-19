@@ -1,6 +1,6 @@
 import "server-only";
 import { asc, eq } from "drizzle-orm";
-import { db } from "@/db/client";
+import { db, withDb } from "@/db/client";
 import { teams, matches, results, members } from "@/db/schema";
 import {
   calcStandingsRaw,
@@ -10,11 +10,11 @@ import {
 } from "./league";
 
 export async function getAllTeams() {
-  return db.select().from(teams).orderBy(asc(teams.displayOrder));
+  return withDb(() => db.select().from(teams).orderBy(asc(teams.displayOrder)));
 }
 
 export async function getAllMembers() {
-  return db.select().from(members).orderBy(asc(members.id));
+  return withDb(() => db.select().from(members).orderBy(asc(members.id)));
 }
 
 export type MatchWithResult = {
@@ -34,23 +34,25 @@ export type MatchWithResult = {
 };
 
 export async function getAllMatches(): Promise<MatchWithResult[]> {
-  const rows = await db
-    .select({
-      id: matches.id,
-      homeTeam: matches.homeTeam,
-      awayTeam: matches.awayTeam,
-      matchDate: matches.matchDate,
-      displayOrder: matches.displayOrder,
-      scoreHome: results.scoreHome,
-      scoreAway: results.scoreAway,
-      yellowHome: results.yellowHome,
-      yellowAway: results.yellowAway,
-      redHome: results.redHome,
-      redAway: results.redAway,
-    })
-    .from(matches)
-    .leftJoin(results, eq(results.matchId, matches.id))
-    .orderBy(asc(matches.displayOrder));
+  const rows = await withDb(() =>
+    db
+      .select({
+        id: matches.id,
+        homeTeam: matches.homeTeam,
+        awayTeam: matches.awayTeam,
+        matchDate: matches.matchDate,
+        displayOrder: matches.displayOrder,
+        scoreHome: results.scoreHome,
+        scoreAway: results.scoreAway,
+        yellowHome: results.yellowHome,
+        yellowAway: results.yellowAway,
+        redHome: results.redHome,
+        redAway: results.redAway,
+      })
+      .from(matches)
+      .leftJoin(results, eq(results.matchId, matches.id))
+      .orderBy(asc(matches.displayOrder)),
+  );
 
   return rows.map((r) => ({
     id: r.id,

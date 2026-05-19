@@ -6,13 +6,20 @@ import { db, withDb } from "@/db/client";
 import { teams, members, matches, results } from "@/db/schema";
 import { autoScheduleDates, todayISO } from "@/lib/league";
 import { getSession } from "@/lib/session";
+import { invalidate, CACHE_KEYS } from "@/lib/cache";
 
 async function requireAdmin() {
   const session = await getSession();
   if (!session.admin) throw new Error("Unauthorized");
 }
 
-function revalidatePublic() {
+async function revalidatePublic() {
+  await invalidate(
+    CACHE_KEYS.league,
+    CACHE_KEYS.teams,
+    CACHE_KEYS.matches,
+    CACHE_KEYS.members,
+  );
   revalidatePath("/");
   revalidatePath("/fixtures");
   revalidatePath("/matches", "layout");
@@ -29,7 +36,7 @@ export async function updateTeamAction(formData: FormData) {
   if (!id || !name || !emoji || !color) return;
   await withDb(() => db.update(teams).set({ name, emoji, color }).where(eq(teams.id, id)));
   revalidatePath("/admin/teams");
-  revalidatePublic();
+  await revalidatePublic();
 }
 
 export async function addMemberAction(formData: FormData) {
@@ -38,6 +45,7 @@ export async function addMemberAction(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   if (!teamId || !name) return;
   await withDb(() => db.insert(members).values({ teamId, name }));
+  await invalidate(CACHE_KEYS.members);
   revalidatePath("/admin/teams");
 }
 
@@ -46,6 +54,7 @@ export async function removeMemberAction(formData: FormData) {
   const id = Number(formData.get("id"));
   if (!Number.isFinite(id)) return;
   await withDb(() => db.delete(members).where(eq(members.id, id)));
+  await invalidate(CACHE_KEYS.members);
   revalidatePath("/admin/teams");
 }
 
@@ -84,7 +93,7 @@ export async function upsertResultAction(formData: FormData) {
   );
   revalidatePath(`/admin/matches/${matchId}`);
   revalidatePath(`/matches/${matchId}`);
-  revalidatePublic();
+  await revalidatePublic();
 }
 
 export async function deleteResultAction(formData: FormData) {
@@ -94,7 +103,7 @@ export async function deleteResultAction(formData: FormData) {
   await withDb(() => db.delete(results).where(eq(results.matchId, matchId)));
   revalidatePath(`/admin/matches/${matchId}`);
   revalidatePath(`/matches/${matchId}`);
-  revalidatePublic();
+  await revalidatePublic();
 }
 
 /* ── Schedule ─────────────────────────────────────────────────────────── */
@@ -150,7 +159,7 @@ export async function moveMatchAction(formData: FormData) {
   );
 
   revalidatePath("/admin/schedule");
-  revalidatePublic();
+  await revalidatePublic();
 }
 
 export async function autoScheduleAction() {
@@ -189,5 +198,5 @@ export async function autoScheduleAction() {
   );
 
   revalidatePath("/admin/schedule");
-  revalidatePublic();
+  await revalidatePublic();
 }

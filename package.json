@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.9",
+    "@upstash/redis": "^1.38.0",
     "@vercel/speed-insights": "^2.0.0",
     "drizzle-orm": "^0.36.0",
     "iron-session": "^8.0.3",

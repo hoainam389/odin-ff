@@ -8,13 +8,20 @@ import {
   sortStandings,
   type RawRow,
 } from "./league";
+import { cached, CACHE_KEYS } from "./cache";
+
+const TTL = 60;
 
 export async function getAllTeams() {
-  return withDb(() => db.select().from(teams).orderBy(asc(teams.displayOrder)));
+  return cached(CACHE_KEYS.teams, TTL, () =>
+    withDb(() => db.select().from(teams).orderBy(asc(teams.displayOrder))),
+  );
 }
 
 export async function getAllMembers() {
-  return withDb(() => db.select().from(members).orderBy(asc(members.id)));
+  return cached(CACHE_KEYS.members, TTL, () =>
+    withDb(() => db.select().from(members).orderBy(asc(members.id))),
+  );
 }
 
 export type MatchWithResult = {
@@ -34,6 +41,7 @@ export type MatchWithResult = {
 };
 
 export async function getAllMatches(): Promise<MatchWithResult[]> {
+  return cached(CACHE_KEYS.matches, TTL, async () => {
   const rows = await withDb(() =>
     db
       .select({
@@ -72,6 +80,7 @@ export async function getAllMatches(): Promise<MatchWithResult[]> {
             redAway: r.redAway!,
           },
   }));
+  });
 }
 
 export async function getMatch(id: number): Promise<MatchWithResult | null> {
@@ -94,6 +103,7 @@ export type LeagueData = {
 };
 
 export async function getLeague(): Promise<LeagueData> {
+  return cached(CACHE_KEYS.league, TTL, async () => {
   const [teamsRows, matchesRows] = await Promise.all([getAllTeams(), getAllMatches()]);
   const raw = calcStandingsRaw(
     teamsRows.map((t) => t.id),
@@ -124,4 +134,5 @@ export async function getLeague(): Promise<LeagueData> {
     fairplayId: fairplayLeader(raw),
     stats: { played, goals, yellow, red },
   };
+  });
 }

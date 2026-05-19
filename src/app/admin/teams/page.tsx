@@ -4,6 +4,7 @@ import {
   addMemberAction,
   removeMemberAction,
 } from "../actions";
+import { EmojiPicker } from "./EmojiPicker";
 
 export const dynamic = "force-dynamic";
 
@@ -35,12 +36,7 @@ export default async function AdminTeamsPage() {
               <form action={updateTeamAction} className="flex flex-col gap-3">
                 <input type="hidden" name="id" value={t.id} />
                 <div className="flex items-center gap-3">
-                  <span
-                    className="w-12 h-12 flex items-center justify-center text-3xl border border-[#1F4D3F] rounded"
-                    style={{ background: "#071411", boxShadow: `inset 0 0 0 2px ${t.color}40` }}
-                  >
-                    {t.emoji}
-                  </span>
+                  <EmojiPicker name="emoji" defaultValue={t.emoji} />
                   <div className="flex-1">
                     <span className="text-label-caps font-label-caps text-on-surface-variant">
                       TEAM {t.id}
@@ -52,30 +48,17 @@ export default async function AdminTeamsPage() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1">
-                    <span className="text-label-caps font-label-caps text-on-surface-variant">
-                      EMOJI
-                    </span>
-                    <input
-                      name="emoji"
-                      defaultValue={t.emoji}
-                      maxLength={4}
-                      className="bg-[#071411] border border-[#1F4D3F] focus:border-primary-fixed-dim rounded p-2 font-body-md outline-none"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-1">
-                    <span className="text-label-caps font-label-caps text-on-surface-variant">
-                      COLOR
-                    </span>
-                    <input
-                      name="color"
-                      type="color"
-                      defaultValue={t.color}
-                      className="bg-[#071411] border border-[#1F4D3F] rounded p-1 h-10 outline-none"
-                    />
-                  </label>
-                </div>
+                <label className="flex flex-col gap-1">
+                  <span className="text-label-caps font-label-caps text-on-surface-variant">
+                    COLOR
+                  </span>
+                  <input
+                    name="color"
+                    type="color"
+                    defaultValue={t.color}
+                    className="bg-[#071411] border border-[#1F4D3F] rounded p-1 h-10 w-full outline-none"
+                  />
+                </label>
                 <button
                   type="submit"
                   className="self-start px-4 py-2 bg-primary-fixed-dim text-[#050807] font-label-caps text-label-caps rounded font-bold uppercase hover:bg-primary-fixed transition-colors"

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { MatchWithResult } from "@/lib/queries";
 import type { Team } from "@/db/schema";
@@ -17,6 +17,14 @@ type Props = {
 export function ScheduleBoard({ matches, teams, today, formatBanner }: Props) {
   const router = useRouter();
   const [, startTransition] = useTransition();
+
+  // Local working copy so drops move the row instantly; we re-sync to props
+  // once the server returns fresh data via router.refresh().
+  const [localMatches, setLocalMatches] = useState(matches);
+  useEffect(() => {
+    setLocalMatches(matches);
+  }, [matches]);
+
   const [dragId, setDragId] = useState<number | null>(null);
   const [hoverDate, setHoverDate] = useState<string | null>(null);
   const [hoverRow, setHoverRow] = useState<number | null>(null);
@@ -24,7 +32,7 @@ export function ScheduleBoard({ matches, teams, today, formatBanner }: Props) {
   const teamMap = useMemo(() => Object.fromEntries(teams.map((t) => [t.id, t])), [teams]);
 
   const grouped = useMemo(() => {
-    const sorted = [...matches].sort((a, b) => a.displayOrder - b.displayOrder);
+    const sorted = [...localMatches].sort((a, b) => a.displayOrder - b.displayOrder);
     const map = new Map<string, MatchWithResult[]>();
     sorted.forEach((m) => {
       const arr = map.get(m.matchDate) ?? [];
@@ -32,16 +40,54 @@ export function ScheduleBoard({ matches, teams, today, formatBanner }: Props) {
       map.set(m.matchDate, arr);
     });
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
-  }, [matches]);
+  }, [localMatches]);
+
+  /**
+   * Apply the same reorder logic locally that the server action does,
+   * so the visible list updates the moment the drop lands.
+   */
+  function applyLocalMove(matchId: number, targetDate: string, targetOrder?: number) {
+    setLocalMatches((prev) => {
+      const sorted = [...prev].sort((a, b) => a.displayOrder - b.displayOrder);
+      const moving = sorted.find((m) => m.id === matchId);
+      if (!moving) return prev;
+      const others = sorted.filter((m) => m.id !== matchId);
+
+      let insertIdx: number;
+      if (typeof targetOrder === "number") {
+        insertIdx = Math.min(Math.max(targetOrder, 0), others.length);
+      } else {
+        // append to end of target day
+        let lastIdxOnDay = -1;
+        others.forEach((m, i) => {
+          if (m.matchDate === targetDate) lastIdxOnDay = i;
+        });
+        if (lastIdxOnDay >= 0) {
+          insertIdx = lastIdxOnDay + 1;
+        } else {
+          const firstAfter = others.findIndex((m) => m.matchDate > targetDate);
+          insertIdx = firstAfter === -1 ? others.length : firstAfter;
+        }
+      }
+
+      const reordered = [...others];
+      reordered.splice(insertIdx, 0, { ...moving, matchDate: targetDate });
+      return reordered.map((m, i) => ({ ...m, displayOrder: i }));
+    });
+  }
 
   function submitMove(matchId: number, targetDate: string, targetOrder?: number) {
+    applyLocalMove(matchId, targetDate, targetOrder);
     const fd = new FormData();
     fd.set("matchId", String(matchId));
     fd.set("targetDate", targetDate);
     if (typeof targetOrder === "number") fd.set("targetOrder", String(targetOrder));
     startTransition(async () => {
-      await moveMatchAction(fd);
-      router.refresh();
+      try {
+        await moveMatchAction(fd);
+      } finally {
+        router.refresh();
+      }
     });
   }
 

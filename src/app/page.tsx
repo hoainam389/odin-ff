@@ -82,11 +82,11 @@ export default async function StandingsPage() {
             </div>
 
             {hasAnyPoints && (
-              <div className="flex justify-center items-end gap-2 sm:gap-4 h-64 mt-4 mb-8">
+              <div className="flex justify-center items-end gap-3 sm:gap-6 h-80 mt-4 mb-8">
                 {top3[1] && (
                   <PodiumColumn
                     rank={2}
-                    teamId={top3[1].teamId}
+                    name={teamMap[top3[1].teamId]?.name ?? top3[1].teamId}
                     points={top3[1].p}
                     emoji={teamMap[top3[1].teamId]?.emoji ?? ""}
                     color={teamMap[top3[1].teamId]?.color ?? ""}
@@ -95,7 +95,7 @@ export default async function StandingsPage() {
                 {top3[0] && (
                   <PodiumColumn
                     rank={1}
-                    teamId={top3[0].teamId}
+                    name={teamMap[top3[0].teamId]?.name ?? top3[0].teamId}
                     points={top3[0].p}
                     emoji={teamMap[top3[0].teamId]?.emoji ?? ""}
                     color={teamMap[top3[0].teamId]?.color ?? ""}
@@ -104,7 +104,7 @@ export default async function StandingsPage() {
                 {top3[2] && (
                   <PodiumColumn
                     rank={3}
-                    teamId={top3[2].teamId}
+                    name={teamMap[top3[2].teamId]?.name ?? top3[2].teamId}
                     points={top3[2].p}
                     emoji={teamMap[top3[2].teamId]?.emoji ?? ""}
                     color={teamMap[top3[2].teamId]?.color ?? ""}
@@ -338,43 +338,72 @@ function Td({ children, className = "" }: { children: React.ReactNode; className
 
 function PodiumColumn({
   rank,
-  teamId: _teamId,
+  name,
   points,
   emoji,
   color,
 }: {
   rank: 1 | 2 | 3;
-  teamId: string;
+  name: string;
   points: number;
   emoji: string;
   color: string;
 }) {
-  const heights = { 1: "h-full", 2: "h-[80%]", 3: "h-[70%]" } as const;
-  const blockHeights = { 1: "h-32", 2: "h-24", 3: "h-20" } as const;
+  const isChamp = rank === 1;
+  const heights = { 1: "h-full", 2: "h-[78%]", 3: "h-[68%]" } as const;
+  const blockHeights = { 1: "h-40", 2: "h-24", 3: "h-20" } as const;
+  const blockWidths = { 1: "w-28 sm:w-40", 2: "w-20 sm:w-24", 3: "w-20 sm:w-24" } as const;
   const blockColors = {
     1: { from: "#1A2622", to: "#8B7500", border: "#FFD700" },
     2: { from: "#1A2622", to: "#464a4b", border: "#c4c7c9" },
     3: { from: "#1A2622", to: "#6B4226", border: "#CD7F32" },
   } as const;
-  const hexSize = rank === 1 ? "w-20 h-20 sm:w-24 sm:h-24" : "w-16 h-16 sm:w-20 sm:h-20";
+  const hexSize = isChamp
+    ? "w-28 h-28 sm:w-32 sm:h-32 text-5xl"
+    : "w-16 h-16 sm:w-20 sm:h-20 text-3xl";
+  const pointsClass = isChamp
+    ? "text-scoreboard-num font-scoreboard-num text-5xl text-[#FFD700] leading-none"
+    : "text-scoreboard-num font-scoreboard-num text-primary leading-none";
   const c = blockColors[rank];
+
   return (
     <div className={`flex flex-col items-center justify-end ${heights[rank]}`}>
-      <div className="text-scoreboard-num font-scoreboard-num text-primary mb-2">{points}</div>
+      {isChamp && (
+        <div className="mb-2 px-3 py-1 rounded bg-[#FFD700] text-[#101509] text-label-caps font-label-caps font-bold tracking-widest neon-glow"
+             style={{ boxShadow: "0 0 16px rgba(255,215,0,0.6)" }}>
+          ★ CHAMPION
+        </div>
+      )}
+      <div className={pointsClass}>{points}</div>
+      <div className="text-label-caps font-label-caps text-on-surface-variant mt-1 mb-3 uppercase max-w-[10rem] truncate">
+        {name}
+      </div>
       <div
-        className={`${hexSize} clip-hex flex items-center justify-center text-3xl mb-4 border-2 border-[#101509]`}
-        style={{ background: color, boxShadow: rank === 1 ? "0 0 20px rgba(255,215,0,0.4)" : undefined }}
+        className={`${hexSize} clip-hex flex items-center justify-center mb-4 border-2 border-[#101509]`}
+        style={{
+          background: color,
+          boxShadow: isChamp
+            ? "0 0 28px rgba(255,215,0,0.55), 0 0 12px rgba(255,215,0,0.4) inset"
+            : undefined,
+        }}
       >
         <span style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))" }}>{emoji}</span>
       </div>
       <div
-        className={`w-20 ${rank === 1 ? "sm:w-32" : "sm:w-24"} ${blockHeights[rank]} border-t-2 flex items-start justify-center pt-2`}
+        className={`${blockWidths[rank]} ${blockHeights[rank]} border-t-[3px] flex items-start justify-center pt-2`}
         style={{
           background: `linear-gradient(to top, ${c.from}, ${c.to})`,
           borderColor: c.border,
+          boxShadow: isChamp ? "0 -8px 20px rgba(255,215,0,0.25)" : undefined,
         }}
       >
-        <span className="font-display-md text-display-md text-[#101509] opacity-60">{rank}</span>
+        <span
+          className={`font-display-md text-[#101509] ${
+            isChamp ? "text-[64px] leading-none opacity-80" : "text-display-md opacity-60"
+          }`}
+        >
+          {rank}
+        </span>
       </div>
     </div>
   );

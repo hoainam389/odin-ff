@@ -6,7 +6,7 @@ import { getLeague } from "@/lib/queries";
 import { getSession } from "@/lib/session";
 import { formatBannerDate, todayISO } from "@/lib/league";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 type SearchParams = Promise<{ filter?: string }>;
 

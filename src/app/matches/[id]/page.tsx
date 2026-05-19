@@ -7,7 +7,7 @@ import { getLeague } from "@/lib/queries";
 import { getSession } from "@/lib/session";
 import { formatHumanLong } from "@/lib/league";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function MatchDetailPage({
   params,

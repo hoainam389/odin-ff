@@ -6,7 +6,7 @@ import { getSession } from "@/lib/session";
 import { formatMonthDay, todayISO } from "@/lib/league";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function StandingsPage() {
   const session = await getSession();

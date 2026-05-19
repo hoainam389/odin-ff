@@ -12,7 +12,12 @@ function getDb() {
   if (!url) {
     throw new Error("DATABASE_URL is not set");
   }
-  _sql = postgres(url, { prepare: false, max: 1 });
+  _sql = postgres(url, {
+    prepare: false,
+    max: 5,
+    idle_timeout: 20,
+    connect_timeout: 10,
+  });
   _db = drizzle(_sql, { schema });
   return _db;
 }

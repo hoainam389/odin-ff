@@ -22,27 +22,28 @@ export default async function AdminDashboardPage() {
           DASHBOARD
         </h1>
         <p className="text-on-surface-variant text-body-sm max-w-xl mt-2">
-          Quick links to every admin surface. All edits broadcast to public viewers in real time.
+          Admin home. Result entry is admin-only; team and schedule edits are
+          open to everyone via the public nav.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <DashCard
           title="TEAMS & MEMBERS"
-          desc="Rename teams, swap emoji/colors, manage rosters."
-          href="/admin/teams"
+          desc="Rename teams, swap emoji/colors, manage rosters. (Public)"
+          href="/teams"
           stat={`${league.teams.length} TEAMS`}
         />
         <DashCard
           title="SCHEDULE EDITOR"
-          desc="Drag matches across days, auto-schedule, set match dates."
-          href="/admin/schedule"
+          desc="Drag matches across days, auto-schedule, set match dates. (Public)"
+          href="/schedule"
           stat={`${pending.length} PENDING`}
         />
         <DashCard
-          title="RESULTS"
-          desc="Enter scores and cards per match."
-          href="/admin/schedule"
+          title="ENTER RESULTS"
+          desc="Score + cards per match. Admin-only."
+          href="/schedule"
           stat={`${league.stats.played} / ${league.matches.length} PLAYED`}
         />
       </div>

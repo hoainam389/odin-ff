@@ -70,7 +70,7 @@ export async function updateTeamAction(formData: FormData) {
     `),
   );
 
-  revalidatePath("/admin/teams");
+  revalidatePath("/teams");
   revalidatePublic();
 }
 
@@ -190,7 +190,7 @@ export async function moveMatchAction(formData: FormData) {
     );
   }
 
-  revalidatePath("/admin/schedule");
+  revalidatePath("/schedule");
   revalidatePublic();
 }
 
@@ -240,6 +240,6 @@ export async function autoScheduleAction() {
     );
   }
 
-  revalidatePath("/admin/schedule");
+  revalidatePath("/schedule");
   revalidatePublic();
 }

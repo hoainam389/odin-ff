@@ -27,13 +27,13 @@ export default async function AdminMatchPage({
   async function saveAndRedirect(formData: FormData) {
     "use server";
     await upsertResultAction(formData);
-    redirect(`/admin/schedule#match-${matchId}`);
+    redirect(`/schedule#match-${matchId}`);
   }
 
   async function clearAndRedirect(formData: FormData) {
     "use server";
     await deleteResultAction(formData);
-    redirect(`/admin/schedule#match-${matchId}`);
+    redirect(`/schedule#match-${matchId}`);
   }
 
   const clearFormId = `clear-${matchId}`;
@@ -48,7 +48,7 @@ export default async function AdminMatchPage({
       )}
       <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-4">
         <Link
-          href="/admin/schedule"
+          href="/schedule"
           className="text-on-surface-variant font-label-caps uppercase tracking-widest text-sm hover:text-primary-fixed-dim transition-colors"
         >
           ← Schedule

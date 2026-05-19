@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { autoScheduleAction } from "../actions";
+import { autoScheduleAction } from "../admin/actions";
 
 export function AutoScheduleButton() {
   const router = useRouter();

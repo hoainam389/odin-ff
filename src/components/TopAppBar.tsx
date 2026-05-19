@@ -1,14 +1,17 @@
 import Link from "next/link";
 
-type Nav = { href: string; label: string };
+type Nav = { href: string; label: string; key: Active };
+type Active = "standings" | "fixtures" | "teams" | "schedule" | "admin";
 
 const NAV: Nav[] = [
-  { href: "/", label: "STANDINGS" },
-  { href: "/fixtures", label: "FIXTURES" },
+  { href: "/", label: "STANDINGS", key: "standings" },
+  { href: "/fixtures", label: "FIXTURES", key: "fixtures" },
+  { href: "/schedule", label: "SCHEDULE", key: "schedule" },
+  { href: "/teams", label: "TEAMS", key: "teams" },
 ];
 
 type Props = {
-  active?: "standings" | "fixtures" | "admin";
+  active?: Active;
 };
 
 export function TopAppBar({ active }: Props) {
@@ -28,11 +31,9 @@ export function TopAppBar({ active }: Props) {
             </div>
           </div>
         </Link>
-        <nav className="hidden md:flex gap-8 items-center h-full">
+        <nav className="hidden md:flex gap-6 items-center h-full">
           {NAV.map((n) => {
-            const isActive =
-              (n.href === "/" && active === "standings") ||
-              (n.href === "/fixtures" && active === "fixtures");
+            const isActive = active === n.key;
             return (
               <Link
                 key={n.href}

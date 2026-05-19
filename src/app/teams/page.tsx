@@ -1,12 +1,14 @@
 import { getAllTeams, getAllMembers } from "@/lib/queries";
-import { updateTeamAction } from "../actions";
+import { updateTeamAction } from "../admin/actions";
+import { TopAppBar } from "@/components/TopAppBar";
+import { Footer } from "@/components/Footer";
 import { EmojiPicker } from "./EmojiPicker";
 import { ColorPicker } from "./ColorPicker";
 import { SaveTeamButton } from "./SaveTeamButton";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminTeamsPage() {
+export default async function TeamsPage() {
   const [teams, members] = await Promise.all([getAllTeams(), getAllMembers()]);
   const membersByTeam = new Map<string, typeof members>();
   members.forEach((m) => {
@@ -16,11 +18,10 @@ export default async function AdminTeamsPage() {
   });
 
   return (
-    <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
+    <>
+      <TopAppBar active="teams" />
+      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
       <div>
-        <span className="text-label-caps font-label-caps text-primary-fixed-dim">
-          ▸ ADMIN
-        </span>
         <h1 className="text-display-md font-display-md text-primary-fixed-dim mt-1">
           TEAMS &amp; MEMBERS
         </h1>
@@ -83,6 +84,8 @@ export default async function AdminTeamsPage() {
           );
         })}
       </div>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }

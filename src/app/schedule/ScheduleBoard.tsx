@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { MatchWithResult } from "@/lib/queries";
 import type { Team } from "@/db/schema";
-import { moveMatchAction } from "../actions";
+import { moveMatchAction } from "../admin/actions";
 
 type Props = {
   matches: MatchWithResult[];

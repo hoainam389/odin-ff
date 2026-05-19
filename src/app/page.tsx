@@ -350,60 +350,57 @@ function PodiumColumn({
   color: string;
 }) {
   const isChamp = rank === 1;
-  const heights = { 1: "h-full", 2: "h-[78%]", 3: "h-[68%]" } as const;
-  const blockHeights = { 1: "h-40", 2: "h-24", 3: "h-20" } as const;
-  const blockWidths = { 1: "w-28 sm:w-40", 2: "w-20 sm:w-24", 3: "w-20 sm:w-24" } as const;
+  const heights = { 1: "h-full", 2: "h-[80%]", 3: "h-[68%]" } as const;
+  const blockHeights = { 1: "h-32", 2: "h-20", 3: "h-16" } as const;
   const blockColors = {
-    1: { from: "#1A2622", to: "#8B7500", border: "#FFD700" },
-    2: { from: "#1A2622", to: "#464a4b", border: "#c4c7c9" },
-    3: { from: "#1A2622", to: "#6B4226", border: "#CD7F32" },
+    1: { ring: "#FFD700", text: "#FFD700", stand: "rgba(255,215,0,0.18)" },
+    2: { ring: "#c4c7c9", text: "#c4c7c9", stand: "rgba(196,199,201,0.14)" },
+    3: { ring: "#CD7F32", text: "#CD7F32", stand: "rgba(205,127,50,0.14)" },
   } as const;
-  const hexSize = isChamp
-    ? "w-28 h-28 sm:w-32 sm:h-32 text-5xl"
-    : "w-16 h-16 sm:w-20 sm:h-20 text-3xl";
-  const pointsClass = isChamp
-    ? "text-scoreboard-num font-scoreboard-num text-5xl text-[#FFD700] leading-none"
-    : "text-scoreboard-num font-scoreboard-num text-primary leading-none";
+  const medals = { 1: "🥇", 2: "🥈", 3: "🥉" } as const;
   const c = blockColors[rank];
+  const avatarSize = isChamp
+    ? "w-24 h-24 sm:w-28 sm:h-28 text-5xl"
+    : rank === 2
+      ? "w-20 h-20 text-3xl"
+      : "w-16 h-16 text-2xl";
+  const pointsClass = isChamp
+    ? "text-scoreboard-num font-scoreboard-num text-5xl leading-none"
+    : "text-scoreboard-num font-scoreboard-num text-2xl leading-none";
 
   return (
-    <div className={`flex flex-col items-center justify-end ${heights[rank]}`}>
-      {isChamp && (
-        <div className="mb-2 px-3 py-1 rounded bg-[#FFD700] text-[#101509] text-label-caps font-label-caps font-bold tracking-widest neon-glow"
-             style={{ boxShadow: "0 0 16px rgba(255,215,0,0.6)" }}>
-          ★ CHAMPION
-        </div>
-      )}
-      <div className={pointsClass}>{points}</div>
-      <div className="text-label-caps font-label-caps text-on-surface-variant mt-1 mb-3 uppercase max-w-[10rem] truncate">
-        {name}
-      </div>
+    <div className={`flex flex-1 max-w-[180px] flex-col items-center justify-end gap-2 ${heights[rank]}`}>
+      {isChamp && <div className="text-3xl">👑</div>}
       <div
-        className={`${hexSize} clip-hex flex items-center justify-center mb-4 border-2 border-[#101509]`}
+        className={`${avatarSize} rounded-full flex items-center justify-center bg-[#0a1f1a]`}
         style={{
-          background: color,
           boxShadow: isChamp
-            ? "0 0 28px rgba(255,215,0,0.55), 0 0 12px rgba(255,215,0,0.4) inset"
-            : undefined,
+            ? `0 0 0 3px ${c.ring}, 0 0 30px ${c.ring}55`
+            : `0 0 0 2px ${c.ring}, 0 0 16px ${c.ring}33`,
+          color,
         }}
       >
         <span style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))" }}>{emoji}</span>
       </div>
       <div
-        className={`${blockWidths[rank]} ${blockHeights[rank]} border-t-[3px] flex items-start justify-center pt-2`}
+        className="text-center font-bold uppercase text-sm whitespace-normal leading-tight"
+        style={{ color: c.text }}
+      >
+        {medals[rank]} {name}
+      </div>
+      <div className={pointsClass} style={{ color: c.text }}>
+        {points}
+        <span className="ml-1 text-label-caps font-label-caps text-on-surface-variant">PTS</span>
+      </div>
+      <div
+        className={`w-full ${blockHeights[rank]} rounded-t-lg border-t border-x flex items-center justify-center font-display-md text-2xl`}
         style={{
-          background: `linear-gradient(to top, ${c.from}, ${c.to})`,
-          borderColor: c.border,
-          boxShadow: isChamp ? "0 -8px 20px rgba(255,215,0,0.25)" : undefined,
+          background: `linear-gradient(180deg, ${c.stand}, transparent)`,
+          borderColor: `${c.ring}55`,
+          color: c.text,
         }}
       >
-        <span
-          className={`font-display-md text-[#101509] ${
-            isChamp ? "text-[64px] leading-none opacity-80" : "text-display-md opacity-60"
-          }`}
-        >
-          {rank}
-        </span>
+        {rank}
       </div>
     </div>
   );

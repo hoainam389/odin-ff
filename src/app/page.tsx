@@ -17,14 +17,13 @@ export default async function StandingsPage() {
   const top3 = ranked.slice(0, 3);
   const hasAnyPoints = top3.some((r) => r.p > 0);
 
-  // "Tonight": next upcoming matchday (today, or earliest future date)
+  // All upcoming matches across every future date, sorted by date then displayOrder.
   const upcoming = league.matches
     .filter((m) => !m.result && m.matchDate >= today)
-    .sort((a, b) => a.matchDate.localeCompare(b.matchDate));
-  const tonightDate = upcoming[0]?.matchDate ?? null;
-  const tonightMatches = tonightDate
-    ? upcoming.filter((m) => m.matchDate === tonightDate)
-    : [];
+    .sort(
+      (a, b) =>
+        a.matchDate.localeCompare(b.matchDate) || a.displayOrder - b.displayOrder,
+    );
 
   // "Final whistle": last 4 completed matches by displayOrder desc
   const completed = league.matches
@@ -196,17 +195,15 @@ export default async function StandingsPage() {
                 <h3 className="text-headline-md font-headline-md text-primary m-0 uppercase leading-none">
                   Next Matches
                 </h3>
-                {tonightDate && (
-                  <span className="font-scoreboard-num text-xl text-primary-fixed">
-                    {formatMonthDay(tonightDate)}
-                  </span>
-                )}
+                <span className="text-label-caps font-label-caps text-on-surface-variant">
+                  {upcoming.length} UPCOMING
+                </span>
               </div>
-              <div className="flex flex-col gap-3">
-                {tonightMatches.length === 0 && (
+              <div className="flex flex-col gap-3 max-h-[480px] overflow-y-auto pr-1">
+                {upcoming.length === 0 && (
                   <div className="text-on-surface-variant text-body-sm">No upcoming matches.</div>
                 )}
-                {tonightMatches.map((m, i) => (
+                {upcoming.map((m, i) => (
                   <Link
                     key={m.id}
                     href={`/matches/${m.id}`}
@@ -215,9 +212,13 @@ export default async function StandingsPage() {
                     } hover:bg-[#0c2620] transition-colors`}
                   >
                     <div className="flex justify-between items-center text-sm font-label-caps text-on-surface-variant">
-                      <span>MD {league.matches.indexOf(m) + 1}</span>
-                      <span className="bg-[#1A2622] px-2 py-1 rounded text-primary-fixed">
-                        UPCOMING
+                      <span>{formatMonthDay(m.matchDate)}</span>
+                      <span
+                        className={`px-2 py-1 rounded ${
+                          i === 0 ? "bg-primary-fixed text-[#101509]" : "bg-[#1A2622] text-primary-fixed"
+                        }`}
+                      >
+                        {i === 0 ? "NEXT UP" : "UPCOMING"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center font-bold uppercase">

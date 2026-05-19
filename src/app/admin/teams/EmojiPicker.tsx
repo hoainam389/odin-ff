@@ -85,7 +85,7 @@ export function EmojiPicker({ name, defaultValue }: Props) {
               })}
             </div>
 
-            <div className="grid grid-cols-8 gap-1 max-h-52 overflow-y-auto odin-scroll">
+            <div className="grid grid-cols-8 gap-1">
               {EMOJI_CATS[cat].map((e) => {
                 const isSelected = e === selected;
                 return (

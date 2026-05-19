@@ -5,6 +5,7 @@ import {
   removeMemberAction,
 } from "../actions";
 import { EmojiPicker } from "./EmojiPicker";
+import { ColorPicker } from "./ColorPicker";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,7 @@ export default async function AdminTeamsPage() {
                 <input type="hidden" name="id" value={t.id} />
                 <div className="flex items-center gap-3">
                   <EmojiPicker name="emoji" defaultValue={t.emoji} />
+                  <ColorPicker name="color" defaultValue={t.color} />
                   <div className="flex-1">
                     <span className="text-label-caps font-label-caps text-on-surface-variant">
                       TEAM {t.id}
@@ -48,17 +50,6 @@ export default async function AdminTeamsPage() {
                     />
                   </div>
                 </div>
-                <label className="flex flex-col gap-1">
-                  <span className="text-label-caps font-label-caps text-on-surface-variant">
-                    COLOR
-                  </span>
-                  <input
-                    name="color"
-                    type="color"
-                    defaultValue={t.color}
-                    className="bg-[#071411] border border-[#1F4D3F] rounded p-1 h-10 w-full outline-none"
-                  />
-                </label>
                 <button
                   type="submit"
                   className="self-start px-4 py-2 bg-primary-fixed-dim text-[#050807] font-label-caps text-label-caps rounded font-bold uppercase hover:bg-primary-fixed transition-colors"

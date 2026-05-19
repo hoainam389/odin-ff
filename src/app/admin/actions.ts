@@ -28,6 +28,10 @@ function revalidatePublic() {
 
 /* ── Teams ────────────────────────────────────────────────────────────── */
 
+/**
+ * Persists team metadata (name/emoji/color) AND the team's two member names
+ * in a single form submission. Each team is locked to exactly 2 members.
+ */
 export async function updateTeamAction(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));
@@ -35,28 +39,24 @@ export async function updateTeamAction(formData: FormData) {
   const emoji = String(formData.get("emoji") ?? "").trim();
   const color = String(formData.get("color") ?? "").trim();
   if (!id || !name || !emoji || !color) return;
-  await withDb(() => db.update(teams).set({ name, emoji, color }).where(eq(teams.id, id)));
+
+  const member1Id = Number(formData.get("member1Id"));
+  const member1Name = String(formData.get("member1Name") ?? "").trim();
+  const member2Id = Number(formData.get("member2Id"));
+  const member2Name = String(formData.get("member2Name") ?? "").trim();
+
+  await withDb(async () => {
+    await db.update(teams).set({ name, emoji, color }).where(eq(teams.id, id));
+    if (Number.isFinite(member1Id) && member1Name) {
+      await db.update(members).set({ name: member1Name }).where(eq(members.id, member1Id));
+    }
+    if (Number.isFinite(member2Id) && member2Name) {
+      await db.update(members).set({ name: member2Name }).where(eq(members.id, member2Id));
+    }
+  });
+
   revalidatePath("/admin/teams");
   revalidatePublic();
-}
-
-export async function addMemberAction(formData: FormData) {
-  await requireAdmin();
-  const teamId = String(formData.get("teamId"));
-  const name = String(formData.get("name") ?? "").trim();
-  if (!teamId || !name) return;
-  await withDb(() => db.insert(members).values({ teamId, name }));
-  await invalidate(CACHE_KEYS.members);
-  revalidatePath("/admin/teams");
-}
-
-export async function removeMemberAction(formData: FormData) {
-  await requireAdmin();
-  const id = Number(formData.get("id"));
-  if (!Number.isFinite(id)) return;
-  await withDb(() => db.delete(members).where(eq(members.id, id)));
-  await invalidate(CACHE_KEYS.members);
-  revalidatePath("/admin/teams");
 }
 
 /* ── Result entry ─────────────────────────────────────────────────────── */

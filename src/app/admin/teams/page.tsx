@@ -1,9 +1,5 @@
 import { getAllTeams, getAllMembers } from "@/lib/queries";
-import {
-  updateTeamAction,
-  addMemberAction,
-  removeMemberAction,
-} from "../actions";
+import { updateTeamAction } from "../actions";
 import { EmojiPicker } from "./EmojiPicker";
 import { ColorPicker } from "./ColorPicker";
 
@@ -25,16 +21,17 @@ export default async function AdminTeamsPage() {
           ▸ ADMIN
         </span>
         <h1 className="text-display-md font-display-md text-primary-fixed-dim mt-1">
-          TEAMS & MEMBERS
+          TEAMS &amp; MEMBERS
         </h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {teams.map((t) => {
           const teamMembers = membersByTeam.get(t.id) ?? [];
+          const [m1, m2] = teamMembers;
           return (
-            <section key={t.id} className="surface-1 rounded p-6 flex flex-col gap-4">
-              <form action={updateTeamAction} className="flex flex-col gap-3">
+            <section key={t.id} className="surface-1 rounded p-6">
+              <form action={updateTeamAction} className="flex flex-col gap-4">
                 <input type="hidden" name="id" value={t.id} />
                 <div className="text-label-caps font-label-caps text-on-surface-variant">
                   TEAM {t.id}
@@ -48,53 +45,44 @@ export default async function AdminTeamsPage() {
                     className="flex-1 bg-[#071411] border border-[#1F4D3F] focus:border-primary-fixed-dim rounded p-2 font-body-md outline-none h-12"
                   />
                 </div>
+
+                <div className="border-t border-[#1F4D3F] pt-3 flex flex-col gap-2">
+                  <span className="text-label-caps font-label-caps text-on-surface-variant">
+                    MEMBERS
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="hidden"
+                      name="member1Id"
+                      value={m1?.id ?? ""}
+                    />
+                    <input
+                      name="member1Name"
+                      defaultValue={m1?.name ?? ""}
+                      placeholder="Member 1"
+                      className="bg-[#071411] border border-[#1F4D3F] focus:border-primary-fixed-dim rounded p-2 font-body-sm outline-none"
+                    />
+                    <input
+                      type="hidden"
+                      name="member2Id"
+                      value={m2?.id ?? ""}
+                    />
+                    <input
+                      name="member2Name"
+                      defaultValue={m2?.name ?? ""}
+                      placeholder="Member 2"
+                      className="bg-[#071411] border border-[#1F4D3F] focus:border-primary-fixed-dim rounded p-2 font-body-sm outline-none"
+                    />
+                  </div>
+                </div>
+
                 <button
                   type="submit"
-                  className="self-start px-4 py-2 bg-primary-fixed-dim text-[#050807] font-label-caps text-label-caps rounded font-bold uppercase hover:bg-primary-fixed transition-colors"
+                  className="self-end mt-2 px-4 py-2 bg-primary-fixed-dim text-[#050807] font-label-caps text-label-caps rounded font-bold uppercase hover:bg-primary-fixed transition-colors"
                 >
                   Save team
                 </button>
               </form>
-
-              <div className="border-t border-[#1F4D3F] pt-3 flex flex-col gap-2">
-                <span className="text-label-caps font-label-caps text-on-surface-variant">
-                  MEMBERS ({teamMembers.length})
-                </span>
-                <ul className="flex flex-col gap-1">
-                  {teamMembers.map((m) => (
-                    <li
-                      key={m.id}
-                      className="flex justify-between items-center bg-[#071411] border border-[#1F4D3F] rounded px-3 py-2 text-body-sm"
-                    >
-                      <span>{m.name}</span>
-                      <form action={removeMemberAction}>
-                        <input type="hidden" name="id" value={m.id} />
-                        <button
-                          type="submit"
-                          className="text-accent-pink hover:text-error transition-colors text-label-caps font-label-caps"
-                        >
-                          REMOVE
-                        </button>
-                      </form>
-                    </li>
-                  ))}
-                </ul>
-                <form action={addMemberAction} className="flex gap-2 mt-1">
-                  <input type="hidden" name="teamId" value={t.id} />
-                  <input
-                    name="name"
-                    placeholder="New member name"
-                    required
-                    className="flex-1 bg-[#071411] border border-[#1F4D3F] focus:border-primary-fixed-dim rounded p-2 font-body-sm outline-none"
-                  />
-                  <button
-                    type="submit"
-                    className="px-3 py-2 surface-1 text-primary-fixed-dim font-label-caps text-label-caps rounded hover:bg-[#0c2620] transition-colors"
-                  >
-                    + ADD
-                  </button>
-                </form>
-              </div>
             </section>
           );
         })}

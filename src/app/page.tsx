@@ -82,7 +82,7 @@ export default async function StandingsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Standings + podium */}
-          <section className="lg:col-span-8 flex flex-col gap-6">
+          <section className="lg:col-span-7 flex flex-col gap-6">
             <div className="flex items-center gap-3 border-b border-[#1F4D3F] pb-4">
               <span className="text-primary-fixed text-3xl">🏆</span>
               <h2 className="text-display-md font-display-md text-primary-fixed m-0 leading-none">
@@ -207,7 +207,7 @@ export default async function StandingsPage() {
           </section>
 
           {/* Sidebar */}
-          <aside className="lg:col-span-4 flex flex-col gap-6">
+          <aside className="lg:col-span-5 flex flex-col gap-6">
             <div className="surface-1 rounded p-4">
               <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-3 mb-4">
                 <h3 className="text-headline-md font-headline-md text-primary m-0 uppercase leading-none">
@@ -247,7 +247,7 @@ export default async function StandingsPage() {
                           } hover:bg-[#0c2620] transition-colors`}
                         >
                           <span className="flex-1 flex items-center gap-2 min-w-0 justify-end">
-                            <span className="truncate">{home?.name ?? m.homeTeam}</span>
+                            <span>{home?.name ?? m.homeTeam}</span>
                             <span className="text-xl shrink-0" style={{ color: home?.color }}>
                               {home?.emoji}
                             </span>
@@ -259,7 +259,7 @@ export default async function StandingsPage() {
                             <span className="text-xl shrink-0" style={{ color: away?.color }}>
                               {away?.emoji}
                             </span>
-                            <span className="truncate">{away?.name ?? m.awayTeam}</span>
+                            <span>{away?.name ?? m.awayTeam}</span>
                           </span>
                         </Link>
                       );

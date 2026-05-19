@@ -137,7 +137,7 @@ export default async function StandingsPage() {
                     <Th className="text-center w-12">GD</Th>
                     <Th className="text-center w-10">🟨</Th>
                     <Th className="text-center w-10">🟥</Th>
-                    <th className="p-3 font-label-caps text-label-caps text-primary-fixed text-center w-16">
+                    <th className="px-2 py-2 font-label-caps text-[11px] tracking-widest font-bold text-primary-fixed text-center w-16">
                       PTS
                     </th>
                   </tr>
@@ -156,25 +156,25 @@ export default async function StandingsPage() {
                         }`}
                       >
                         <td
-                          className={`p-3 text-center sticky left-0 z-10 ${
+                          className={`px-2 py-2 text-center sticky left-0 z-10 ${
                             idx % 2 === 1 ? "bg-[#071411]" : "bg-[#0a1f1a]"
                           } group-hover:bg-[#152A23] transition-colors`}
                         >
                           {podiumColor ? (
                             <div
-                              className="w-6 h-6 text-[#101509] font-headline-md text-headline-md rounded-sm mx-auto flex items-center justify-center"
+                              className="w-5 h-5 text-[#101509] text-xs font-bold rounded-sm mx-auto flex items-center justify-center"
                               style={{ background: podiumColor }}
                             >
                               {idx + 1}
                             </div>
                           ) : (
-                            <span className="text-on-surface-variant font-scoreboard-num text-xl">
+                            <span className="text-on-surface-variant font-scoreboard-num text-base">
                               {idx + 1}
                             </span>
                           )}
                         </td>
                         <td
-                          className={`p-3 font-bold border-l-2 sticky left-12 z-10 ${
+                          className={`px-2 py-2 text-sm font-bold border-l-2 sticky left-12 z-10 ${
                             idx % 2 === 1 ? "bg-[#071411]" : "bg-[#0a1f1a]"
                           } group-hover:bg-[#152A23] transition-colors`}
                           style={{ borderColor: podiumColor ?? "transparent" }}
@@ -197,12 +197,12 @@ export default async function StandingsPage() {
                         <Td className={gd > 0 ? "text-primary-fixed" : gd < 0 ? "text-accent-pink" : "text-on-surface-variant"}>
                           {gd > 0 ? `+${gd}` : gd}
                         </Td>
-                        <td className="p-3 text-center text-on-surface-variant">{row.y}</td>
-                        <td className={`p-3 text-center ${row.r > 0 ? "text-error font-bold" : "text-on-surface-variant"}`}>
+                        <td className="px-2 py-2 text-center text-sm text-on-surface-variant">{row.y}</td>
+                        <td className={`px-2 py-2 text-center text-sm ${row.r > 0 ? "text-error font-bold" : "text-on-surface-variant"}`}>
                           {row.r}
                         </td>
                         <td className="p-0 text-center">
-                          <div className="bg-primary-fixed text-[#101509] font-scoreboard-num text-2xl h-full w-full py-2 px-1 flex items-center justify-center">
+                          <div className="bg-primary-fixed text-[#101509] font-scoreboard-num text-xl h-full w-full py-1.5 px-1 flex items-center justify-center">
                             {row.p}
                           </div>
                         </td>
@@ -216,30 +216,30 @@ export default async function StandingsPage() {
 
           {/* Sidebar */}
           <aside className="lg:col-span-5 flex flex-col gap-6">
-            <div className="surface-1 rounded p-4">
-              <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-3 mb-4">
-                <h3 className="text-headline-md font-headline-md text-primary m-0 uppercase leading-none">
+            <div className="surface-1 rounded p-3">
+              <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-2 mb-3">
+                <h3 className="text-base font-bold tracking-wide text-primary m-0 uppercase leading-none">
                   Next Matches
                 </h3>
-                <span className="text-label-caps font-label-caps text-on-surface-variant">
+                <span className="text-[10px] tracking-widest font-bold text-on-surface-variant">
                   {upcoming.length} UPCOMING
                 </span>
               </div>
-              <div className="flex flex-col gap-4 max-h-[480px] overflow-y-auto pr-1 odin-scroll">
+              <div className="flex flex-col gap-3 max-h-[480px] overflow-y-auto pr-1 odin-scroll">
                 {upcomingDays.length === 0 && (
                   <div className="text-on-surface-variant text-body-sm">No upcoming matches.</div>
                 )}
                 {upcomingDays.map(([date, items], dayIdx) => (
-                  <div key={date} className="flex flex-col gap-2">
+                  <div key={date} className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between sticky top-0 bg-[#0a1f1a] pb-1 z-10">
                       <span
-                        className={`font-scoreboard-num text-base ${
+                        className={`font-scoreboard-num text-sm ${
                           dayIdx === 0 ? "text-primary-fixed" : "text-on-surface"
                         }`}
                       >
                         {formatMonthDay(date)}
                       </span>
-                      <span className="text-[10px] font-label-caps text-on-surface-variant">
+                      <span className="text-[9px] tracking-widest font-bold text-on-surface-variant">
                         {items.length} {items.length === 1 ? "MATCH" : "MATCHES"}
                       </span>
                     </div>
@@ -250,21 +250,21 @@ export default async function StandingsPage() {
                         <Link
                           key={m.id}
                           href={`/matches/${m.id}`}
-                          className={`bg-[#071411] p-3 rounded flex justify-between items-center font-bold uppercase border-l-2 ${
+                          className={`bg-[#071411] px-2.5 py-2 rounded flex justify-between items-center text-xs font-bold uppercase border-l-2 ${
                             dayIdx === 0 ? "border-primary-fixed" : "border-[#1F4D3F]"
                           } hover:bg-[#0c2620] transition-colors`}
                         >
-                          <span className="flex-1 flex items-center gap-2 min-w-0 justify-end">
+                          <span className="flex-1 flex items-center gap-1.5 min-w-0 justify-end">
                             <span>{home?.name ?? m.homeTeam}</span>
-                            <span className="text-xl shrink-0" style={{ color: home?.color }}>
+                            <span className="text-base shrink-0" style={{ color: home?.color }}>
                               {home?.emoji}
                             </span>
                           </span>
-                          <span className="text-on-surface-variant font-label-caps text-[10px] px-2 shrink-0">
+                          <span className="text-on-surface-variant text-[9px] px-1.5 shrink-0">
                             VS
                           </span>
-                          <span className="flex-1 flex items-center gap-2 min-w-0">
-                            <span className="text-xl shrink-0" style={{ color: away?.color }}>
+                          <span className="flex-1 flex items-center gap-1.5 min-w-0">
+                            <span className="text-base shrink-0" style={{ color: away?.color }}>
                               {away?.emoji}
                             </span>
                             <span>{away?.name ?? m.awayTeam}</span>
@@ -277,27 +277,27 @@ export default async function StandingsPage() {
               </div>
             </div>
 
-            <div className="surface-1 rounded p-4">
-              <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-3 mb-4">
-                <h3 className="text-headline-md font-headline-md text-on-surface-variant m-0 uppercase leading-none">
+            <div className="surface-1 rounded p-3">
+              <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-2 mb-3">
+                <h3 className="text-base font-bold tracking-wide text-on-surface-variant m-0 uppercase leading-none">
                   Final Whistle
                 </h3>
               </div>
-              <div className="flex flex-col gap-4 max-h-[480px] overflow-y-auto pr-1 odin-scroll">
+              <div className="flex flex-col gap-3 max-h-[480px] overflow-y-auto pr-1 odin-scroll">
                 {completedDays.length === 0 && (
-                  <div className="text-on-surface-variant text-body-sm">No results yet.</div>
+                  <div className="text-on-surface-variant text-xs">No results yet.</div>
                 )}
                 {completedDays.map(([date, items], dayIdx) => (
-                  <div key={date} className="flex flex-col gap-2">
+                  <div key={date} className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between sticky top-0 bg-[#0a1f1a] pb-1 z-10">
                       <span
-                        className={`font-scoreboard-num text-base ${
+                        className={`font-scoreboard-num text-sm ${
                           dayIdx === 0 ? "text-primary-fixed" : "text-on-surface"
                         }`}
                       >
                         {formatMonthDay(date)}
                       </span>
-                      <span className="text-[10px] font-label-caps text-on-surface-variant">
+                      <span className="text-[9px] tracking-widest font-bold text-on-surface-variant">
                         {items.length} {items.length === 1 ? "MATCH" : "MATCHES"}
                       </span>
                     </div>
@@ -311,35 +311,35 @@ export default async function StandingsPage() {
                         <Link
                           key={m.id}
                           href={`/matches/${m.id}`}
-                          className="bg-[#071411] p-3 rounded flex items-center justify-between border-l-2 border-[#1F4D3F] hover:bg-[#0c2620] transition-colors"
+                          className="bg-[#071411] px-2.5 py-2 rounded flex items-center justify-between text-xs border-l-2 border-[#1F4D3F] hover:bg-[#0c2620] transition-colors"
                         >
-                          <span className="flex-1 flex items-center gap-2 min-w-0 justify-end">
+                          <span className="flex-1 flex items-center gap-1.5 min-w-0 justify-end">
                             <span
-                              className={`truncate font-bold uppercase ${
+                              className={`font-bold uppercase ${
                                 homeWin ? "text-primary-fixed" : "text-on-surface-variant"
                               }`}
                             >
                               {home?.name ?? m.homeTeam}
                             </span>
-                            <span className="text-xl shrink-0" style={{ color: home?.color }}>
+                            <span className="text-base shrink-0" style={{ color: home?.color }}>
                               {home?.emoji}
                             </span>
                           </span>
-                          <span className="bg-surface px-2 py-1 rounded border border-[#1F4D3F] flex items-center gap-1 mx-2 font-scoreboard-num text-base shrink-0">
+                          <span className="bg-surface px-1.5 py-0.5 rounded border border-[#1F4D3F] flex items-center gap-1 mx-1.5 font-scoreboard-num text-sm shrink-0">
                             <span className={homeWin ? "text-primary-fixed" : "text-on-surface-variant"}>
                               {r.scoreHome}
                             </span>
-                            <span className="text-on-surface-variant text-xs">-</span>
+                            <span className="text-on-surface-variant text-[10px]">-</span>
                             <span className={awayWin ? "text-primary-fixed" : "text-on-surface-variant"}>
                               {r.scoreAway}
                             </span>
                           </span>
-                          <span className="flex-1 flex items-center gap-2 min-w-0">
-                            <span className="text-xl shrink-0" style={{ color: away?.color }}>
+                          <span className="flex-1 flex items-center gap-1.5 min-w-0">
+                            <span className="text-base shrink-0" style={{ color: away?.color }}>
                               {away?.emoji}
                             </span>
                             <span
-                              className={`truncate font-bold uppercase ${
+                              className={`font-bold uppercase ${
                                 awayWin ? "text-primary-fixed" : "text-on-surface-variant"
                               }`}
                             >
@@ -382,7 +382,7 @@ function Stat({
 
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <th className={`p-3 font-label-caps text-label-caps text-on-surface-variant ${className}`}>
+    <th className={`px-2 py-2 font-label-caps text-[11px] tracking-widest font-bold text-on-surface-variant ${className}`}>
       {children}
     </th>
   );
@@ -391,7 +391,7 @@ function Th({ children, className = "" }: { children: React.ReactNode; className
 function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <td
-      className={`p-3 text-center font-scoreboard-num text-xl leading-none ${className}`}
+      className={`px-2 py-2 text-center font-scoreboard-num text-base leading-none ${className}`}
     >
       {children}
     </td>

@@ -30,8 +30,22 @@ export default async function AdminMatchPage({
     redirect(`/admin/schedule#match-${matchId}`);
   }
 
+  async function clearAndRedirect(formData: FormData) {
+    "use server";
+    await deleteResultAction(formData);
+    redirect(`/admin/schedule#match-${matchId}`);
+  }
+
+  const clearFormId = `clear-${matchId}`;
+
   return (
     <main className="flex-grow w-full max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-6">
+      {/* Clear form lives outside the save form (no nested forms allowed in HTML). */}
+      {r && (
+        <form id={clearFormId} action={clearAndRedirect} className="hidden">
+          <input type="hidden" name="matchId" value={match.id} />
+        </form>
+      )}
       <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-4">
         <Link
           href="/admin/schedule"
@@ -94,7 +108,13 @@ export default async function AdminMatchPage({
 
         <div className="flex justify-between items-center pt-4 border-t border-[#1F4D3F]">
           {r ? (
-            <ClearButton matchId={match.id} />
+            <button
+              type="submit"
+              form={clearFormId}
+              className="px-4 py-2 text-label-caps font-label-caps text-accent-pink hover:bg-error-container/30 rounded uppercase transition-colors"
+            >
+              Clear result
+            </button>
           ) : (
             <span />
           )}
@@ -133,16 +153,3 @@ function NumberInput({
   );
 }
 
-function ClearButton({ matchId }: { matchId: number }) {
-  return (
-    <form action={deleteResultAction}>
-      <input type="hidden" name="matchId" value={matchId} />
-      <button
-        type="submit"
-        className="px-4 py-2 text-label-caps font-label-caps text-accent-pink hover:bg-error-container/30 rounded uppercase transition-colors"
-      >
-        Clear result
-      </button>
-    </form>
-  );
-}

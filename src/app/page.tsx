@@ -25,6 +25,15 @@ export default async function StandingsPage() {
         a.matchDate.localeCompare(b.matchDate) || a.displayOrder - b.displayOrder,
     );
 
+  // Group upcoming matches by day for the sidebar.
+  const upcomingByDay = new Map<string, typeof upcoming>();
+  upcoming.forEach((m) => {
+    const arr = upcomingByDay.get(m.matchDate) ?? [];
+    arr.push(m);
+    upcomingByDay.set(m.matchDate, arr);
+  });
+  const upcomingDays = Array.from(upcomingByDay.entries());
+
   // "Final whistle": last 4 completed matches by displayOrder desc
   const completed = league.matches
     .filter((m) => m.result)
@@ -199,34 +208,38 @@ export default async function StandingsPage() {
                   {upcoming.length} UPCOMING
                 </span>
               </div>
-              <div className="flex flex-col gap-3 max-h-[480px] overflow-y-auto pr-1">
-                {upcoming.length === 0 && (
+              <div className="flex flex-col gap-4 max-h-[480px] overflow-y-auto pr-1">
+                {upcomingDays.length === 0 && (
                   <div className="text-on-surface-variant text-body-sm">No upcoming matches.</div>
                 )}
-                {upcoming.map((m, i) => (
-                  <Link
-                    key={m.id}
-                    href={`/matches/${m.id}`}
-                    className={`bg-[#071411] p-3 rounded flex flex-col gap-2 border-l-2 ${
-                      i === 0 ? "border-primary-fixed" : "border-[#1F4D3F]"
-                    } hover:bg-[#0c2620] transition-colors`}
-                  >
-                    <div className="flex justify-between items-center text-sm font-label-caps text-on-surface-variant">
-                      <span>{formatMonthDay(m.matchDate)}</span>
+                {upcomingDays.map(([date, items], dayIdx) => (
+                  <div key={date} className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between sticky top-0 bg-[#0a1f1a] pb-1 z-10">
                       <span
-                        className={`px-2 py-1 rounded ${
-                          i === 0 ? "bg-primary-fixed text-[#101509]" : "bg-[#1A2622] text-primary-fixed"
+                        className={`font-scoreboard-num text-base ${
+                          dayIdx === 0 ? "text-primary-fixed" : "text-on-surface"
                         }`}
                       >
-                        {i === 0 ? "NEXT UP" : "UPCOMING"}
+                        {formatMonthDay(date)}
+                      </span>
+                      <span className="text-[10px] font-label-caps text-on-surface-variant">
+                        {items.length} {items.length === 1 ? "MATCH" : "MATCHES"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center font-bold uppercase">
-                      <span>{teamMap[m.homeTeam]?.name ?? m.homeTeam}</span>
-                      <span className="text-on-surface-variant font-label-caps text-[10px]">VS</span>
-                      <span>{teamMap[m.awayTeam]?.name ?? m.awayTeam}</span>
-                    </div>
-                  </Link>
+                    {items.map((m) => (
+                      <Link
+                        key={m.id}
+                        href={`/matches/${m.id}`}
+                        className={`bg-[#071411] p-3 rounded flex justify-between items-center font-bold uppercase border-l-2 ${
+                          dayIdx === 0 ? "border-primary-fixed" : "border-[#1F4D3F]"
+                        } hover:bg-[#0c2620] transition-colors`}
+                      >
+                        <span>{teamMap[m.homeTeam]?.name ?? m.homeTeam}</span>
+                        <span className="text-on-surface-variant font-label-caps text-[10px]">VS</span>
+                        <span>{teamMap[m.awayTeam]?.name ?? m.awayTeam}</span>
+                      </Link>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>

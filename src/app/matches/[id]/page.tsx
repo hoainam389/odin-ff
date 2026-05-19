@@ -4,7 +4,6 @@ import { TopAppBar } from "@/components/TopAppBar";
 import { Footer } from "@/components/Footer";
 import { RealtimeRefresh } from "@/components/RealtimeRefresh";
 import { getLeague } from "@/lib/queries";
-import { getSession } from "@/lib/session";
 import { formatHumanLong } from "@/lib/league";
 
 export const revalidate = 30;
@@ -18,7 +17,6 @@ export default async function MatchDetailPage({
   const matchId = Number(id);
   if (Number.isNaN(matchId)) notFound();
 
-  const session = await getSession();
   const league = await getLeague();
   const teamMap = Object.fromEntries(league.teams.map((t) => [t.id, t]));
   const match = league.matches.find((m) => m.id === matchId);
@@ -31,7 +29,7 @@ export default async function MatchDetailPage({
   return (
     <>
       <RealtimeRefresh />
-      <TopAppBar isAdmin={!!session.admin} />
+      <TopAppBar />
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
         <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-4">
           <Link
@@ -43,14 +41,12 @@ export default async function MatchDetailPage({
           <span className="font-label-caps text-on-surface-variant uppercase">
             {formatHumanLong(match.matchDate)}
           </span>
-          {session.admin && (
-            <Link
-              href={`/admin/matches/${match.id}`}
-              className="px-3 py-1 bg-primary-fixed-dim text-[#050807] text-label-caps font-label-caps rounded font-bold"
-            >
-              EDIT RESULT
-            </Link>
-          )}
+          <Link
+            href={`/admin/matches/${match.id}`}
+            className="px-3 py-1 bg-primary-fixed-dim text-[#050807] text-label-caps font-label-caps rounded font-bold"
+          >
+            EDIT RESULT
+          </Link>
         </div>
 
         <section className="surface-1 rounded p-8 flex flex-col gap-6">

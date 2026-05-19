@@ -3,7 +3,6 @@ import { TopAppBar } from "@/components/TopAppBar";
 import { Footer } from "@/components/Footer";
 import { RealtimeRefresh } from "@/components/RealtimeRefresh";
 import { getLeague } from "@/lib/queries";
-import { getSession } from "@/lib/session";
 import { formatBannerDate, todayISO } from "@/lib/league";
 
 export const revalidate = 30;
@@ -15,7 +14,6 @@ export default async function FixturesPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const session = await getSession();
   const { filter = "all" } = await searchParams;
   const league = await getLeague();
   const teamMap = Object.fromEntries(league.teams.map((t) => [t.id, t]));
@@ -43,7 +41,7 @@ export default async function FixturesPage({
   return (
     <>
       <RealtimeRefresh />
-      <TopAppBar active="fixtures" isAdmin={!!session.admin} />
+      <TopAppBar active="fixtures" />
       <section className="w-full bg-[#071411] border-b border-[#1F4D3F] pt-6 pb-4">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-end gap-4">
           <div>

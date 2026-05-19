@@ -14,9 +14,12 @@ function getDb() {
   }
   _sql = postgres(url, {
     prepare: false,
-    max: 5,
-    idle_timeout: 20,
-    connect_timeout: 10,
+    // Vercel functions are short-lived; pooling within an instance is a trap
+    // because the upstream pooler closes idle conns without us noticing.
+    max: 1,
+    idle_timeout: 4,
+    max_lifetime: 30,
+    connect_timeout: 8,
   });
   _db = drizzle(_sql, { schema });
   return _db;

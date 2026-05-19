@@ -9,10 +9,9 @@ const NAV: Nav[] = [
 
 type Props = {
   active?: "standings" | "fixtures" | "admin";
-  isAdmin?: boolean;
 };
 
-export function TopAppBar({ active, isAdmin }: Props) {
+export function TopAppBar({ active }: Props) {
   return (
     <header className="bg-surface border-b-2 border-primary-fixed-dim shadow-[0_4px_12px_rgba(146,219,11,0.3)] sticky top-0 z-40">
       <div className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
@@ -54,25 +53,16 @@ export function TopAppBar({ active, isAdmin }: Props) {
             <span className="w-1.5 h-1.5 rounded-full bg-surface" />
             <span className="font-label-caps text-label-caps">LIVE</span>
           </div>
-          {isAdmin ? (
-            <Link
-              href="/admin"
-              className={
-                active === "admin"
-                  ? "text-primary-fixed font-label-caps uppercase tracking-widest text-sm"
-                  : "text-on-surface-variant font-label-caps hover:text-primary-fixed transition-colors uppercase tracking-widest text-sm"
-              }
-            >
-              ADMIN
-            </Link>
-          ) : (
-            <Link
-              href="/login"
-              className="text-on-surface-variant font-label-caps hover:text-primary-fixed transition-colors uppercase tracking-widest text-sm"
-            >
-              ADMIN
-            </Link>
-          )}
+          <Link
+            href="/admin"
+            className={
+              active === "admin"
+                ? "text-primary-fixed font-label-caps uppercase tracking-widest text-sm"
+                : "text-on-surface-variant font-label-caps hover:text-primary-fixed transition-colors uppercase tracking-widest text-sm"
+            }
+          >
+            ADMIN
+          </Link>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 w-full h-[2px] led-strip" />

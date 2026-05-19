@@ -2,14 +2,12 @@ import { TopAppBar } from "@/components/TopAppBar";
 import { Footer } from "@/components/Footer";
 import { RealtimeRefresh } from "@/components/RealtimeRefresh";
 import { getLeague } from "@/lib/queries";
-import { getSession } from "@/lib/session";
 import { formatMonthDay, todayISO } from "@/lib/league";
 import Link from "next/link";
 
 export const revalidate = 30;
 
 export default async function StandingsPage() {
-  const session = await getSession();
   const league = await getLeague();
   const teamMap = Object.fromEntries(league.teams.map((t) => [t.id, t]));
   const today = todayISO();
@@ -38,7 +36,7 @@ export default async function StandingsPage() {
   return (
     <>
       <RealtimeRefresh />
-      <TopAppBar active="standings" isAdmin={!!session.admin} />
+      <TopAppBar active="standings" />
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
         {/* Hero stats strip */}
         <section className="surface-1 rounded w-full overflow-hidden">

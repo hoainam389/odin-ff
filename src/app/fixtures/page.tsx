@@ -4,7 +4,7 @@ import { getLeague } from "@/lib/queries";
 import { todayISO } from "@/lib/league";
 import { FixturesView } from "./FixturesView";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 export default async function FixturesPage() {
   const league = await getLeague();

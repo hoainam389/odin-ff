@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { getLeague } from "@/lib/queries";
 import { formatHumanLong } from "@/lib/league";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 export default async function MatchDetailPage({
   params,

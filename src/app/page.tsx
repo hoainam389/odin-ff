@@ -4,7 +4,9 @@ import { getLeague } from "@/lib/queries";
 import { formatMonthDay, todayISO } from "@/lib/league";
 import Link from "next/link";
 
-export const revalidate = 30;
+// Skip prerender at build (DB unreachable from build runner); render on first
+// request and let the CDN cache for ~30s via Cache-Control in middleware.
+export const dynamic = "force-dynamic";
 
 export default async function StandingsPage() {
   const league = await getLeague();

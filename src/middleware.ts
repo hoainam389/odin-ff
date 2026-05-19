@@ -29,5 +29,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  // Only result entry/clear is admin-gated. Teams + schedule are public.
+  matcher: ["/admin/matches/:path*"],
 };

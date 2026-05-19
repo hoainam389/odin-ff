@@ -29,11 +29,11 @@ export function AdminNav() {
             key={n.href}
             href={n.href}
             aria-current={active ? "page" : undefined}
-            className={
+            className={`px-4 py-2 surface-1 text-label-caps font-label-caps rounded uppercase transition-colors ${
               active
-                ? "px-4 py-2 bg-primary-fixed-dim text-[#050807] text-label-caps font-label-caps rounded font-bold uppercase"
-                : "px-4 py-2 surface-1 text-on-surface-variant text-label-caps font-label-caps rounded hover:text-primary-fixed-dim transition-colors uppercase"
-            }
+                ? "text-primary-fixed-dim"
+                : "text-on-surface-variant hover:text-primary-fixed-dim"
+            }`}
           >
             {n.label}
           </Link>

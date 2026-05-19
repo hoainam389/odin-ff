@@ -31,6 +31,9 @@ function revalidatePublic() {
 /**
  * Persists team metadata (name/emoji/color) AND the team's two member names
  * in a single form submission. Each team is locked to exactly 2 members.
+ *
+ * Runs the team update and both member updates in parallel — one round-trip
+ * per statement rather than three sequential round-trips.
  */
 export async function updateTeamAction(formData: FormData) {
   await requireAdmin();
@@ -45,15 +48,28 @@ export async function updateTeamAction(formData: FormData) {
   const member2Id = Number(formData.get("member2Id"));
   const member2Name = String(formData.get("member2Name") ?? "").trim();
 
-  await withDb(async () => {
-    await db.update(teams).set({ name, emoji, color }).where(eq(teams.id, id));
-    if (Number.isFinite(member1Id) && member1Name) {
-      await db.update(members).set({ name: member1Name }).where(eq(members.id, member1Id));
-    }
-    if (Number.isFinite(member2Id) && member2Name) {
-      await db.update(members).set({ name: member2Name }).where(eq(members.id, member2Id));
-    }
-  });
+  // Single round-trip: stitch the team update and both member updates into
+  // one statement with CTEs so we only pay one Vercel→Supabase RTT.
+  const memberStmts = [
+    Number.isFinite(member1Id) && member1Name
+      ? sql`, m1 AS (UPDATE members SET name = ${member1Name} WHERE id = ${member1Id})`
+      : sql``,
+    Number.isFinite(member2Id) && member2Name
+      ? sql`, m2 AS (UPDATE members SET name = ${member2Name} WHERE id = ${member2Id})`
+      : sql``,
+  ];
+
+  await withDb(() =>
+    db.execute(sql`
+      WITH t AS (
+        UPDATE teams SET name = ${name}, emoji = ${emoji}, color = ${color}
+        WHERE id = ${id}
+      )
+      ${memberStmts[0]}
+      ${memberStmts[1]}
+      SELECT 1
+    `),
+  );
 
   revalidatePath("/admin/teams");
   revalidatePublic();

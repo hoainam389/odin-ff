@@ -2,6 +2,7 @@ import { getAllTeams, getAllMembers } from "@/lib/queries";
 import { updateTeamAction } from "../actions";
 import { EmojiPicker } from "./EmojiPicker";
 import { ColorPicker } from "./ColorPicker";
+import { SaveTeamButton } from "./SaveTeamButton";
 
 export const dynamic = "force-dynamic";
 
@@ -76,12 +77,7 @@ export default async function AdminTeamsPage() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  className="self-end mt-2 px-4 py-2 bg-primary-fixed-dim text-[#050807] font-label-caps text-label-caps rounded font-bold uppercase hover:bg-primary-fixed transition-colors"
-                >
-                  Save team
-                </button>
+                <SaveTeamButton />
               </form>
             </section>
           );

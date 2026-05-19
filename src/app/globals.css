@@ -75,24 +75,29 @@ body {
   }
 }
 
-/* Slim themed scrollbar — opt-in via .odin-scroll */
-.odin-scroll {
+/* Slim lime scrollbar applied globally. Firefox uses scrollbar-color /
+   scrollbar-width; Chromium/Webkit use the ::-webkit-scrollbar pseudos. */
+* {
   scrollbar-width: thin;
   scrollbar-color: rgba(173, 248, 54, 0.5) transparent;
 }
-.odin-scroll::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-.odin-scroll::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: transparent;
 }
-.odin-scroll::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background: rgba(173, 248, 54, 0.4);
   border-radius: 3px;
 }
-.odin-scroll::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background: rgba(173, 248, 54, 0.7);
+}
+
+/* Kept as a no-op alias so existing .odin-scroll usages keep working. */
+.odin-scroll {
 }
 
 /* DnD helpers */

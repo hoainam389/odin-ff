@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getLeague } from "@/lib/queries";
-import { autoScheduleAction } from "../actions";
 import { ScheduleBoard } from "./ScheduleBoard";
+import { AutoScheduleButton } from "./AutoScheduleButton";
 import { formatBannerDate, todayISO } from "@/lib/league";
 
 export const dynamic = "force-dynamic";
@@ -25,14 +25,7 @@ export default async function AdminSchedulePage() {
             to redistribute pending matches 3 per workday (weekends skipped).
           </p>
         </div>
-        <form action={autoScheduleAction}>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-primary-fixed-dim text-[#050807] font-label-caps text-label-caps rounded font-bold uppercase hover:bg-primary-fixed transition-colors"
-          >
-            ⚡ Auto-schedule
-          </button>
-        </form>
+        <AutoScheduleButton />
       </div>
 
       <ScheduleBoard

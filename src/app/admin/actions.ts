@@ -13,13 +13,14 @@ async function requireAdmin() {
   if (!session.admin) throw new Error("Unauthorized");
 }
 
-async function revalidatePublic() {
-  await invalidate(
+function revalidatePublic() {
+  // Fire-and-forget Redis invalidation — response shouldn't wait on it.
+  invalidate(
     CACHE_KEYS.league,
     CACHE_KEYS.teams,
     CACHE_KEYS.matches,
     CACHE_KEYS.members,
-  );
+  ).catch(() => {});
   revalidatePath("/");
   revalidatePath("/fixtures");
   revalidatePath("/matches", "layout");
@@ -36,7 +37,7 @@ export async function updateTeamAction(formData: FormData) {
   if (!id || !name || !emoji || !color) return;
   await withDb(() => db.update(teams).set({ name, emoji, color }).where(eq(teams.id, id)));
   revalidatePath("/admin/teams");
-  await revalidatePublic();
+  revalidatePublic();
 }
 
 export async function addMemberAction(formData: FormData) {
@@ -93,7 +94,7 @@ export async function upsertResultAction(formData: FormData) {
   );
   revalidatePath(`/admin/matches/${matchId}`);
   revalidatePath(`/matches/${matchId}`);
-  await revalidatePublic();
+  revalidatePublic();
 }
 
 export async function deleteResultAction(formData: FormData) {
@@ -103,7 +104,7 @@ export async function deleteResultAction(formData: FormData) {
   await withDb(() => db.delete(results).where(eq(results.matchId, matchId)));
   revalidatePath(`/admin/matches/${matchId}`);
   revalidatePath(`/matches/${matchId}`);
-  await revalidatePublic();
+  revalidatePublic();
 }
 
 /* ── Schedule ─────────────────────────────────────────────────────────── */
@@ -176,7 +177,7 @@ export async function moveMatchAction(formData: FormData) {
   }
 
   revalidatePath("/admin/schedule");
-  await revalidatePublic();
+  revalidatePublic();
 }
 
 export async function autoScheduleAction() {
@@ -227,5 +228,5 @@ export async function autoScheduleAction() {
   }
 
   revalidatePath("/admin/schedule");
-  await revalidatePublic();
+  revalidatePublic();
 }

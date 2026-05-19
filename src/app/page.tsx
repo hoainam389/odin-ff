@@ -226,19 +226,35 @@ export default async function StandingsPage() {
                         {items.length} {items.length === 1 ? "MATCH" : "MATCHES"}
                       </span>
                     </div>
-                    {items.map((m) => (
-                      <Link
-                        key={m.id}
-                        href={`/matches/${m.id}`}
-                        className={`bg-[#071411] p-3 rounded flex justify-between items-center font-bold uppercase border-l-2 ${
-                          dayIdx === 0 ? "border-primary-fixed" : "border-[#1F4D3F]"
-                        } hover:bg-[#0c2620] transition-colors`}
-                      >
-                        <span>{teamMap[m.homeTeam]?.name ?? m.homeTeam}</span>
-                        <span className="text-on-surface-variant font-label-caps text-[10px]">VS</span>
-                        <span>{teamMap[m.awayTeam]?.name ?? m.awayTeam}</span>
-                      </Link>
-                    ))}
+                    {items.map((m) => {
+                      const home = teamMap[m.homeTeam];
+                      const away = teamMap[m.awayTeam];
+                      return (
+                        <Link
+                          key={m.id}
+                          href={`/matches/${m.id}`}
+                          className={`bg-[#071411] p-3 rounded flex justify-between items-center font-bold uppercase border-l-2 ${
+                            dayIdx === 0 ? "border-primary-fixed" : "border-[#1F4D3F]"
+                          } hover:bg-[#0c2620] transition-colors`}
+                        >
+                          <span className="flex-1 flex items-center gap-2 min-w-0 justify-end">
+                            <span className="truncate">{home?.name ?? m.homeTeam}</span>
+                            <span className="text-xl shrink-0" style={{ color: home?.color }}>
+                              {home?.emoji}
+                            </span>
+                          </span>
+                          <span className="text-on-surface-variant font-label-caps text-[10px] px-2 shrink-0">
+                            VS
+                          </span>
+                          <span className="flex-1 flex items-center gap-2 min-w-0">
+                            <span className="text-xl shrink-0" style={{ color: away?.color }}>
+                              {away?.emoji}
+                            </span>
+                            <span className="truncate">{away?.name ?? m.awayTeam}</span>
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </div>
                 ))}
               </div>

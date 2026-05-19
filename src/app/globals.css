@@ -75,6 +75,26 @@ body {
   }
 }
 
+/* Slim themed scrollbar — opt-in via .odin-scroll */
+.odin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(173, 248, 54, 0.5) transparent;
+}
+.odin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.odin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.odin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(173, 248, 54, 0.4);
+  border-radius: 3px;
+}
+.odin-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(173, 248, 54, 0.7);
+}
+
 /* DnD helpers */
 .fixture-row.dragging {
   opacity: 0.4;

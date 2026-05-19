@@ -208,7 +208,7 @@ export default async function StandingsPage() {
                   {upcoming.length} UPCOMING
                 </span>
               </div>
-              <div className="flex flex-col gap-4 max-h-[480px] overflow-y-auto pr-1">
+              <div className="flex flex-col gap-4 max-h-[480px] overflow-y-auto pr-1 odin-scroll">
                 {upcomingDays.length === 0 && (
                   <div className="text-on-surface-variant text-body-sm">No upcoming matches.</div>
                 )}

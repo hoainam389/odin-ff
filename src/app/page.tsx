@@ -34,11 +34,20 @@ export default async function StandingsPage() {
   });
   const upcomingDays = Array.from(upcomingByDay.entries());
 
-  // "Final whistle": last 4 completed matches by displayOrder desc
+  // All completed matches, grouped by date (most recent day first).
   const completed = league.matches
     .filter((m) => m.result)
-    .sort((a, b) => b.displayOrder - a.displayOrder)
-    .slice(0, 4);
+    .sort(
+      (a, b) =>
+        b.matchDate.localeCompare(a.matchDate) || a.displayOrder - b.displayOrder,
+    );
+  const completedByDay = new Map<string, typeof completed>();
+  completed.forEach((m) => {
+    const arr = completedByDay.get(m.matchDate) ?? [];
+    arr.push(m);
+    completedByDay.set(m.matchDate, arr);
+  });
+  const completedDays = Array.from(completedByDay.entries());
 
   const fairplayTeam = league.fairplayId ? teamMap[league.fairplayId] : null;
 
@@ -266,45 +275,74 @@ export default async function StandingsPage() {
                   Final Whistle
                 </h3>
               </div>
-              <div className="flex flex-col gap-2">
-                {completed.length === 0 && (
+              <div className="flex flex-col gap-4 max-h-[480px] overflow-y-auto pr-1 odin-scroll">
+                {completedDays.length === 0 && (
                   <div className="text-on-surface-variant text-body-sm">No results yet.</div>
                 )}
-                {completed.map((m) => {
-                  const r = m.result!;
-                  const home = teamMap[m.homeTeam];
-                  const away = teamMap[m.awayTeam];
-                  const homeWin = r.scoreHome > r.scoreAway;
-                  const awayWin = r.scoreAway > r.scoreHome;
-                  return (
-                    <Link
-                      key={m.id}
-                      href={`/matches/${m.id}`}
-                      className="flex items-center justify-between p-2 hover:bg-[#152A23] rounded transition-colors"
-                    >
-                      <span className="font-label-caps text-on-surface-variant w-12">
-                        {formatMonthDay(m.matchDate)}
+                {completedDays.map(([date, items], dayIdx) => (
+                  <div key={date} className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between sticky top-0 bg-[#0a1f1a] pb-1 z-10">
+                      <span
+                        className={`font-scoreboard-num text-base ${
+                          dayIdx === 0 ? "text-primary-fixed" : "text-on-surface"
+                        }`}
+                      >
+                        {formatMonthDay(date)}
                       </span>
-                      <div className="flex-grow flex justify-center items-center gap-3 font-scoreboard-num text-xl leading-none">
-                        <span className={homeWin ? "text-primary-fixed" : "text-on-surface-variant"}>
-                          {home?.name.replace("Team ", "").toUpperCase()}
-                        </span>
-                        <div className="bg-[#071411] px-3 py-1 rounded flex items-center gap-2 border border-[#1F4D3F]">
-                          <span className={homeWin ? "text-primary-fixed" : "text-on-surface-variant"}>
-                            {r.scoreHome}
+                      <span className="text-[10px] font-label-caps text-on-surface-variant">
+                        {items.length} {items.length === 1 ? "MATCH" : "MATCHES"}
+                      </span>
+                    </div>
+                    {items.map((m) => {
+                      const r = m.result!;
+                      const home = teamMap[m.homeTeam];
+                      const away = teamMap[m.awayTeam];
+                      const homeWin = r.scoreHome > r.scoreAway;
+                      const awayWin = r.scoreAway > r.scoreHome;
+                      return (
+                        <Link
+                          key={m.id}
+                          href={`/matches/${m.id}`}
+                          className="bg-[#071411] p-3 rounded flex items-center justify-between border-l-2 border-[#1F4D3F] hover:bg-[#0c2620] transition-colors"
+                        >
+                          <span className="flex-1 flex items-center gap-2 min-w-0 justify-end">
+                            <span
+                              className={`truncate font-bold uppercase ${
+                                homeWin ? "text-primary-fixed" : "text-on-surface-variant"
+                              }`}
+                            >
+                              {home?.name ?? m.homeTeam}
+                            </span>
+                            <span className="text-xl shrink-0" style={{ color: home?.color }}>
+                              {home?.emoji}
+                            </span>
                           </span>
-                          <span className="text-on-surface-variant text-sm">-</span>
-                          <span className={awayWin ? "text-primary-fixed" : "text-on-surface-variant"}>
-                            {r.scoreAway}
+                          <span className="bg-surface px-2 py-1 rounded border border-[#1F4D3F] flex items-center gap-1 mx-2 font-scoreboard-num text-base shrink-0">
+                            <span className={homeWin ? "text-primary-fixed" : "text-on-surface-variant"}>
+                              {r.scoreHome}
+                            </span>
+                            <span className="text-on-surface-variant text-xs">-</span>
+                            <span className={awayWin ? "text-primary-fixed" : "text-on-surface-variant"}>
+                              {r.scoreAway}
+                            </span>
                           </span>
-                        </div>
-                        <span className={awayWin ? "text-primary-fixed" : "text-on-surface-variant"}>
-                          {away?.name.replace("Team ", "").toUpperCase()}
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                })}
+                          <span className="flex-1 flex items-center gap-2 min-w-0">
+                            <span className="text-xl shrink-0" style={{ color: away?.color }}>
+                              {away?.emoji}
+                            </span>
+                            <span
+                              className={`truncate font-bold uppercase ${
+                                awayWin ? "text-primary-fixed" : "text-on-surface-variant"
+                              }`}
+                            >
+                              {away?.name ?? m.awayTeam}
+                            </span>
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
             </div>
           </aside>

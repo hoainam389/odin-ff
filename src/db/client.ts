@@ -17,7 +17,8 @@ function getDb() {
     max: 1,
     idle_timeout: 1,
     max_lifetime: 20,
-    connect_timeout: 8,
+    // Aggressive timeouts so a stuck pooler can't hang the whole function.
+    connect_timeout: 5,
     onnotice: () => {},
   });
   _db = drizzle(_sql, { schema });
@@ -54,22 +55,35 @@ function isStaleConnError(err: unknown): boolean {
     msg.includes("Connection closed") ||
     msg.includes("CONNECTION_CLOSED") ||
     msg.includes("CONNECTION_ENDED") ||
-    msg.includes("CONNECTION_DESTROYED")
+    msg.includes("CONNECTION_DESTROYED") ||
+    msg.includes("CONNECT_TIMEOUT") ||
+    msg.includes("timed out")
   );
 }
 
+function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms),
+    ),
+  ]);
+}
+
+const DB_OP_TIMEOUT_MS = 6000;
+
 /**
- * Run a DB op once, and on a "Connection closed"-style failure, reset the
- * pooled client and retry once. This is the standard pgBouncer + serverless
- * recovery pattern.
+ * Run a DB op with a hard timeout. On a "Connection closed"-style failure or
+ * a timeout, reset the pooled client and retry once with a fresh socket.
+ * Caps total worst case at ~12s instead of the 60s function limit.
  */
 export async function withDb<T>(op: () => Promise<T>): Promise<T> {
   try {
-    return await op();
+    return await withTimeout(op(), DB_OP_TIMEOUT_MS, "db.op");
   } catch (err) {
     if (!isStaleConnError(err)) throw err;
     await reset();
-    return op();
+    return withTimeout(op(), DB_OP_TIMEOUT_MS, "db.op-retry");
   }
 }
 

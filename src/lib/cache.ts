@@ -5,8 +5,6 @@ let _redis: Redis | null = null;
 
 function getRedis(): Redis | null {
   if (_redis) return _redis;
-  // Upstash Redis from Vercel Marketplace exposes one of these env-var sets.
-  // Try them in order so the same code works locally and in prod.
   const url =
     process.env.KV_REST_API_URL ??
     process.env.UPSTASH_REDIS_REST_URL ??
@@ -21,9 +19,25 @@ function getRedis(): Redis | null {
 }
 
 /**
+ * Race a promise against a timeout. Used to bound the time we'll wait on
+ * external infra (Redis, Postgres) so a stuck connection can't burn the
+ * entire serverless function budget.
+ */
+function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms),
+    ),
+  ]);
+}
+
+const REDIS_TIMEOUT_MS = 1500;
+
+/**
  * Read-through cache: serves the cached value if present, otherwise runs `op`,
  * stores its result under `key` with the given TTL, and returns the fresh value.
- * If Redis isn't configured, `op` runs directly with no caching.
+ * If Redis isn't configured, or any cache call hangs/errors, falls back to `op`.
  */
 export async function cached<T>(
   key: string,
@@ -33,17 +47,16 @@ export async function cached<T>(
   const r = getRedis();
   if (!r) return op();
   try {
-    const hit = await r.get<T>(key);
+    const hit = await withTimeout(r.get<T>(key), REDIS_TIMEOUT_MS, "redis.get");
     if (hit !== null && hit !== undefined) return hit;
   } catch {
-    // ignore cache read failures — never let cache infra take down the page
+    // ignore cache read failures — fall through to DB
   }
   const fresh = await op();
-  try {
-    await r.set(key, fresh, { ex: ttlSeconds });
-  } catch {
-    // ignore cache write failures
-  }
+  // Fire-and-forget the write so a slow Upstash doesn't slow down the response.
+  withTimeout(r.set(key, fresh, { ex: ttlSeconds }), REDIS_TIMEOUT_MS, "redis.set").catch(
+    () => {},
+  );
   return fresh;
 }
 
@@ -52,7 +65,7 @@ export async function invalidate(...keys: string[]): Promise<void> {
   const r = getRedis();
   if (!r || keys.length === 0) return;
   try {
-    await r.del(...keys);
+    await withTimeout(r.del(...keys), REDIS_TIMEOUT_MS, "redis.del");
   } catch {
     // ignore
   }

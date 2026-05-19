@@ -36,19 +36,17 @@ export default async function AdminTeamsPage() {
             <section key={t.id} className="surface-1 rounded p-6 flex flex-col gap-4">
               <form action={updateTeamAction} className="flex flex-col gap-3">
                 <input type="hidden" name="id" value={t.id} />
+                <div className="text-label-caps font-label-caps text-on-surface-variant">
+                  TEAM {t.id}
+                </div>
                 <div className="flex items-center gap-3">
                   <EmojiPicker name="emoji" defaultValue={t.emoji} />
                   <ColorPicker name="color" defaultValue={t.color} />
-                  <div className="flex-1">
-                    <span className="text-label-caps font-label-caps text-on-surface-variant">
-                      TEAM {t.id}
-                    </span>
-                    <input
-                      name="name"
-                      defaultValue={t.name}
-                      className="w-full bg-[#071411] border border-[#1F4D3F] focus:border-primary-fixed-dim rounded p-2 font-body-md outline-none"
-                    />
-                  </div>
+                  <input
+                    name="name"
+                    defaultValue={t.name}
+                    className="flex-1 bg-[#071411] border border-[#1F4D3F] focus:border-primary-fixed-dim rounded p-2 font-body-md outline-none h-12"
+                  />
                 </div>
                 <button
                   type="submit"

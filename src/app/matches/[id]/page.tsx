@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { TopAppBar } from "@/components/TopAppBar";
 import { Footer } from "@/components/Footer";
-import { RealtimeRefresh } from "@/components/RealtimeRefresh";
 import { getLeague } from "@/lib/queries";
 import { formatHumanLong } from "@/lib/league";
 
@@ -28,7 +27,6 @@ export default async function MatchDetailPage({
 
   return (
     <>
-      <RealtimeRefresh />
       <TopAppBar />
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
         <div className="flex items-center justify-between border-b border-[#1F4D3F] pb-4">

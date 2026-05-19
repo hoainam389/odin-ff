@@ -10,6 +10,8 @@ function getDb() {
   if (_db) return _db;
   const url = process.env.DATABASE_URL;
   if (!url) {
+    // During `next build` without DATABASE_URL we'd rather skip prerender
+    // than fail the build. Pages will fall back to first-hit ISR in prod.
     throw new Error("DATABASE_URL is not set");
   }
   _sql = postgres(url, {

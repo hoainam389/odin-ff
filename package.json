@@ -13,7 +13,6 @@
     "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.4",
     "@tailwindcss/forms": "^0.5.9",
     "drizzle-orm": "^0.36.0",
     "iron-session": "^8.0.3",

@@ -1,6 +1,5 @@
 import { TopAppBar } from "@/components/TopAppBar";
 import { Footer } from "@/components/Footer";
-import { RealtimeRefresh } from "@/components/RealtimeRefresh";
 import { getLeague } from "@/lib/queries";
 import { formatMonthDay, todayISO } from "@/lib/league";
 import Link from "next/link";
@@ -35,7 +34,6 @@ export default async function StandingsPage() {
 
   return (
     <>
-      <RealtimeRefresh />
       <TopAppBar active="standings" />
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
         {/* Hero stats strip */}

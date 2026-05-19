@@ -145,18 +145,35 @@ export async function moveMatchAction(formData: FormData) {
   const newOrder = [...others];
   newOrder.splice(insertIdx, 0, { ...moving, matchDate: targetDate });
 
-  await withDb(() =>
-    db.transaction(async (tx) => {
-      for (let i = 0; i < newOrder.length; i++) {
-        const m = newOrder[i];
-        const newDate = m.id === matchId ? targetDate : m.matchDate;
-        await tx
-          .update(matches)
-          .set({ matchDate: newDate, displayOrder: i })
-          .where(eq(matches.id, m.id));
-      }
-    }),
-  );
+  // Only persist rows whose (matchDate, displayOrder) actually changed.
+  // For 21 matches a drag usually touches 1-4, so we save ~17 round-trips.
+  const oldByOrder = new Map(all.map((m, i) => [m.id, { date: m.matchDate, order: i }]));
+  const changed: { id: number; matchDate: string; displayOrder: number }[] = [];
+  newOrder.forEach((m, i) => {
+    const newDate = m.id === matchId ? targetDate : m.matchDate;
+    const prev = oldByOrder.get(m.id);
+    if (!prev || prev.date !== newDate || prev.order !== i) {
+      changed.push({ id: m.id, matchDate: newDate, displayOrder: i });
+    }
+  });
+
+  if (changed.length > 0) {
+    // One round trip: a single UPDATE … FROM (VALUES …) statement.
+    const values = sql.join(
+      changed.map(
+        (c) => sql`(${c.id}::int, ${c.matchDate}::date, ${c.displayOrder}::int)`,
+      ),
+      sql`, `,
+    );
+    await withDb(() =>
+      db.execute(sql`
+        UPDATE matches AS m
+        SET match_date = v.match_date, display_order = v.display_order
+        FROM (VALUES ${values}) AS v(id, match_date, display_order)
+        WHERE m.id = v.id
+      `),
+    );
+  }
 
   revalidatePath("/admin/schedule");
   await revalidatePublic();
@@ -186,16 +203,28 @@ export async function autoScheduleAction() {
     todayISO(),
   );
 
-  await withDb(() =>
-    db.transaction(async (tx) => {
-      for (const u of updates) {
-        await tx
-          .update(matches)
-          .set({ matchDate: u.matchDate, displayOrder: u.displayOrder })
-          .where(eq(matches.id, u.id));
-      }
-    }),
-  );
+  const oldById = new Map(all.map((m) => [m.id, m]));
+  const changed = updates.filter((u) => {
+    const prev = oldById.get(u.id);
+    return !prev || prev.matchDate !== u.matchDate || prev.displayOrder !== u.displayOrder;
+  });
+
+  if (changed.length > 0) {
+    const values = sql.join(
+      changed.map(
+        (c) => sql`(${c.id}::int, ${c.matchDate}::date, ${c.displayOrder}::int)`,
+      ),
+      sql`, `,
+    );
+    await withDb(() =>
+      db.execute(sql`
+        UPDATE matches AS m
+        SET match_date = v.match_date, display_order = v.display_order
+        FROM (VALUES ${values}) AS v(id, match_date, display_order)
+        WHERE m.id = v.id
+      `),
+    );
+  }
 
   revalidatePath("/admin/schedule");
   await revalidatePublic();

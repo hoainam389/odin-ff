@@ -126,8 +126,8 @@ export default async function StandingsPage() {
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                   <tr className="border-b-2 border-[#1F4D3F] bg-[#071411]">
-                    <Th className="w-12 text-center">#</Th>
-                    <Th>TEAM</Th>
+                    <Th className="w-12 text-center sticky left-0 z-20 bg-[#071411]">#</Th>
+                    <Th className="sticky left-12 z-20 bg-[#071411]">TEAM</Th>
                     <Th className="text-center w-10">P</Th>
                     <Th className="text-center w-10">W</Th>
                     <Th className="text-center w-10">D</Th>
@@ -155,7 +155,11 @@ export default async function StandingsPage() {
                           idx % 2 === 1 ? "bg-[#071411]" : ""
                         }`}
                       >
-                        <td className="p-3 text-center">
+                        <td
+                          className={`p-3 text-center sticky left-0 z-10 ${
+                            idx % 2 === 1 ? "bg-[#071411]" : "bg-[#0a1f1a]"
+                          } group-hover:bg-[#152A23] transition-colors`}
+                        >
                           {podiumColor ? (
                             <div
                               className="w-6 h-6 text-[#101509] font-headline-md text-headline-md rounded-sm mx-auto flex items-center justify-center"
@@ -170,15 +174,19 @@ export default async function StandingsPage() {
                           )}
                         </td>
                         <td
-                          className="p-3 font-bold flex items-center gap-2 border-l-2 ml-[1px]"
+                          className={`p-3 font-bold border-l-2 sticky left-12 z-10 ${
+                            idx % 2 === 1 ? "bg-[#071411]" : "bg-[#0a1f1a]"
+                          } group-hover:bg-[#152A23] transition-colors`}
                           style={{ borderColor: podiumColor ?? "transparent" }}
                         >
-                          <span
-                            className="w-2 h-2 rounded-full inline-block"
-                            style={{ background: team?.color ?? "#fff" }}
-                          />
-                          <span className="uppercase">{team?.name}</span>
-                          <span style={{ color: team?.color }}>{team?.emoji}</span>
+                          <span className="inline-flex items-center gap-2">
+                            <span
+                              className="w-2 h-2 rounded-full inline-block"
+                              style={{ background: team?.color ?? "#fff" }}
+                            />
+                            <span className="uppercase">{team?.name}</span>
+                            <span style={{ color: team?.color }}>{team?.emoji}</span>
+                          </span>
                         </td>
                         <Td>{row.played}</Td>
                         <Td>{row.w}</Td>

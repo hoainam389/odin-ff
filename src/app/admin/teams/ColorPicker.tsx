@@ -24,12 +24,12 @@ export function ColorPicker({ name, defaultValue }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative inline-flex">
       <input type="hidden" name={name} value={selected} />
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-12 h-12 rounded border border-[#1F4D3F] hover:border-primary-fixed-dim transition-colors"
+        className="w-12 h-12 block rounded border border-[#1F4D3F] hover:border-primary-fixed-dim transition-colors"
         style={{ background: selected }}
         aria-label="Choose color"
       />

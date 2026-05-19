@@ -32,12 +32,12 @@ export function EmojiPicker({ name, defaultValue }: Props) {
   const [cat, setCat] = useState(CATS[0]);
 
   return (
-    <div className="relative">
+    <div className="relative inline-flex">
       <input type="hidden" name={name} value={selected} />
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-12 h-12 flex items-center justify-center text-3xl border border-[#1F4D3F] rounded bg-[#071411] hover:border-primary-fixed-dim transition-colors"
+        className="w-12 h-12 flex items-center justify-center text-3xl leading-none border border-[#1F4D3F] rounded bg-[#071411] hover:border-primary-fixed-dim transition-colors"
         aria-label="Choose emoji"
       >
         {selected}
